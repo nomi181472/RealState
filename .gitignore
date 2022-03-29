@@ -5,3 +5,9 @@
 /RealState/realstate/.vs/realstate
 /RealState/realstate/bin/Debug/net5.0
 /RealState/realstate/obj
+/RealState/realstate.dataaccess/bin/Debug/net5.0
+/RealState/realstate.dataaccess/obj
+/RealState/realstate.models/bin/Debug/net5.0
+/RealState/realstate.models/obj
+/RealState/realstate.utility/bin/Debug/net5.0
+/RealState/realstate.utility/obj

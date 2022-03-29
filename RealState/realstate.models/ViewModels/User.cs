@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace realstate.Models
+namespace realstate.models.ViewModels
 {
     public class User
     {

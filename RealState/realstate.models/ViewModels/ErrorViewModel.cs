@@ -1,6 +1,6 @@
 using System;
 
-namespace realstate.Models
+namespace realstate.models.ViewModels
 {
     public class ErrorViewModel
     {
