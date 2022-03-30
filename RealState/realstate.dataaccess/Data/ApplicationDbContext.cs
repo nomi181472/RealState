@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using realstate.models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,7 @@ namespace realstate.dataaccess.Data
         {
 
         }
+        public DbSet<User> UserTBL { get; set; } 
+        public DbSet<Location> LocationTBL { get; set; }
     }
 }
