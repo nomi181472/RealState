@@ -11,8 +11,8 @@ namespace realstate.dataaccess.Repository
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _db;
-       public IUserRepository user { get; private set; }
-        public ILocationRepository location { get; private set; }
+       public IUserRepository userRepoAccess { get; private set; }
+        public ILocationRepository locationRepoAccess { get; private set; }
         public ISP_Call sP_Call { get; private set; }
 
   
@@ -20,9 +20,9 @@ namespace realstate.dataaccess.Repository
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
-            user = new UserRepository(_db);
+            userRepoAccess = new UserRepository(_db);
             sP_Call = new SP_CALL(_db);
-            location = new LocationRepository(_db);
+            locationRepoAccess = new LocationRepository(_db);
         }
          public async void save()
         {

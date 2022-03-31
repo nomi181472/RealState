@@ -8,7 +8,8 @@ namespace realstate.dataaccess.Repository.IRepository
 {
    public  interface IUnitOfWork:IDisposable
     {
-        IUserRepository user { get; }
+        IUserRepository userRepoAccess { get; }
+        ILocationRepository locationRepoAccess { get; }
         ISP_Call sP_Call { get; }
     }
 }
