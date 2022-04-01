@@ -15,14 +15,15 @@ namespace realstate.dataaccess.Repository
         public ILocationRepository locationRepoAccess { get; private set; }
         public ISP_Call sP_Call { get; private set; }
 
-  
-         
+        public ISocietyRepository societyRepoAccess { get; private set; }
+
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
             userRepoAccess = new UserRepository(_db);
             sP_Call = new SP_CALL(_db);
             locationRepoAccess = new LocationRepository(_db);
+            societyRepoAccess = new SocietyRepository(_db);
         }
          public  async Task Save()
         {
