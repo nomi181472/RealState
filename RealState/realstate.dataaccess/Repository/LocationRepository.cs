@@ -18,14 +18,13 @@ namespace realstate.dataaccess.Repository
             _db = db ;
         }
 
-        public async void update(Location entity)
+        public async Task Update(Location entity)
         {
             var entityFromDb=_db.LocationTBL.FirstOrDefault(x => x.LocationId == entity.LocationId);
             if (entityFromDb != null)
             {
                 entityFromDb.City = entity.City;
                 entityFromDb.Province = entity.Province;
-                entityFromDb.District = entity.District;
                 entityFromDb.Country = entity.Country;
                 await _db.SaveChangesAsync();
             }

@@ -9,7 +9,7 @@ namespace realstate.dataaccess.Repository.IRepository
 {
     public interface ILocationRepository:IRepository<Location>
     {
-        void update(Location entity);
+        Task Update(Location entity);
        
     }
 }

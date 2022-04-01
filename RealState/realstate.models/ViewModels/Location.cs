@@ -11,10 +11,12 @@ namespace realstate.models.ViewModels
     {
         [Key]
         public int LocationId { get; set; }
+        [Required]
         public string City { get; set; }
         
-        public string District { get; set; }
+        [Required]
         public string Province { get; set; }
+        [Required]
         public string Country { get; set; }
     }
 }

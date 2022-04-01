@@ -10,6 +10,7 @@ namespace realstate.dataaccess.Repository.IRepository
     {
         IUserRepository userRepoAccess { get; }
         ILocationRepository locationRepoAccess { get; }
+        Task Save();
         ISP_Call sP_Call { get; }
     }
 }

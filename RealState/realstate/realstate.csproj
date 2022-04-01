@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -24,6 +24,11 @@
     <ProjectReference Include="..\realstate.dataaccess\realstate.dataaccess.csproj" />
     <ProjectReference Include="..\realstate.models\realstate.models.csproj" />
     <ProjectReference Include="..\realstate.utility\realstate.utility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DTOs\Location\" />
+    <Folder Include="Views\Shared\CustomPartialViews\" />
   </ItemGroup>
 
 </Project>

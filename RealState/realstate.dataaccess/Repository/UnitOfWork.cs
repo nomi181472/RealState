@@ -24,16 +24,16 @@ namespace realstate.dataaccess.Repository
             sP_Call = new SP_CALL(_db);
             locationRepoAccess = new LocationRepository(_db);
         }
-         public async void save()
+         public  async Task Save()
         {
-           await _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
 
 
         }
 
-        public async void Dispose()
+        public  void Dispose()
         {
-            await _db.DisposeAsync();
+             _db.Dispose();
         }
     }
 }
