@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using realstate.models.ViewModels;
 using System;
@@ -9,7 +10,10 @@ using System.Threading.Tasks;
 
 namespace realstate.Areas.User.Controllers
 {
+   
+
     [Area("User")]
+    
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

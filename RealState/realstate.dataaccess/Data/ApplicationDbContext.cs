@@ -17,5 +17,7 @@ namespace realstate.dataaccess.Data
         public DbSet<User> UserTBL { get; set; } 
         public DbSet<Location> LocationTBL { get; set; }
         public DbSet<Society> SocietyTBL { get; set; }
+        public DbSet<ApplicationUser> ApplicationUserTBL { get; set; }
+        public DbSet<VerifiedUser> VerifiedUserTBL { get; set; }
     }
 }

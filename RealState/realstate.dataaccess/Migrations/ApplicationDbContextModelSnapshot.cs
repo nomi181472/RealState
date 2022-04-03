@@ -82,6 +82,10 @@ namespace realstate.dataaccess.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -133,6 +137,8 @@ namespace realstate.dataaccess.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -280,6 +286,36 @@ namespace realstate.dataaccess.Migrations
                     b.ToTable("UserTBL");
                 });
 
+            modelBuilder.Entity("realstate.models.ViewModels.VerifiedUser", b =>
+                {
+                    b.Property<int>("VerifiedUserID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityLevel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("VerifiedUserID");
+
+                    b.ToTable("VerifiedUserTBL");
+                });
+
+            modelBuilder.Entity("realstate.models.ViewModels.ApplicationUser", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<int?>("VerifiedUserId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("VerifiedUserId");
+
+                    b.HasDiscriminator().HasValue("ApplicationUser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -340,6 +376,15 @@ namespace realstate.dataaccess.Migrations
                         .IsRequired();
 
                     b.Navigation("LocationTBL");
+                });
+
+            modelBuilder.Entity("realstate.models.ViewModels.ApplicationUser", b =>
+                {
+                    b.HasOne("realstate.models.ViewModels.VerifiedUser", "VerifiedUserTBL")
+                        .WithMany()
+                        .HasForeignKey("VerifiedUserId");
+
+                    b.Navigation("VerifiedUserTBL");
                 });
 #pragma warning restore 612, 618
         }

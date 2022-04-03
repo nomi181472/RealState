@@ -16,6 +16,9 @@ namespace realstate.dataaccess.Repository
         public ISP_Call sP_Call { get; private set; }
 
         public ISocietyRepository societyRepoAccess { get; private set; }
+        public IApplicationUserRepository applicationUserRepoAccess { get; private set; }
+
+        public IVerifiedUserRepository verifiedUserRepoAccess { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -24,6 +27,8 @@ namespace realstate.dataaccess.Repository
             sP_Call = new SP_CALL(_db);
             locationRepoAccess = new LocationRepository(_db);
             societyRepoAccess = new SocietyRepository(_db);
+            verifiedUserRepoAccess = new VerifiedUserRepository(_db);
+            applicationUserRepoAccess = new ApplicationUserRepository(_db);
         }
          public  async Task Save()
         {

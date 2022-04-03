@@ -14,6 +14,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using realstate.dataaccess.Repository.IRepository;
 using realstate.dataaccess.Repository;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using realstate.utility;
 
 namespace realstate
 {
@@ -31,10 +33,13 @@ namespace realstate
         {
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection")));
-           services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+           services.AddIdentity<IdentityUser,IdentityRole>()
+                .AddDefaultTokenProviders()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IEmailSender, EmailSender>();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            services.AddRazorPages(); ;
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +68,7 @@ namespace realstate
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{area=User}/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }
