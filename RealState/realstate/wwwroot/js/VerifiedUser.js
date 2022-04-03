@@ -13,47 +13,83 @@ function loadDatatable() {
         },
         "columns": [
             {
-                "data":"userName","Width":"20%"
+                "data":"userName","Width":"10%"
             },
             {
-                "data": "email", "Width": "20%"
+                "data": "email", "Width": "10%"
             },
             
             {
-                "data": "phoneNumber", "Width": "20%"
+                "data": "phoneNumber", "Width": "10%"
             },
             {
                 "data": "isVerified",
                 "render": function (data) {
                     if (data) {
-                        return `<input type="checkbox" disabled checked />`
+                        return `YES`
                     }
                     else {
-                        return `<input type="checkbox" disabled />`
+                        return `NO`
                     }
-                }
+                },
+                "width": "10%"
             },
+           
             {
-                "data": "email",
+                "data": {
+                    id: "id", lockoutend: "lockoutEnd", isVerified:"isVerified"
+                },
                 "render": function (data) {
-                    return `
+                    var today = new Date().getTime();
+                    var lockout = new Date(data.lockoutEnd).getTime();
+                    if (lockout > today) {
+                        return `
                     <div class="text-center">
-                    <a href="/AdminPanel/VerifiedUser/upsert/${data}" class="btn btn-success text-white" style="cursor:pointer">
-                    <i class="fas fa-edit"></i>
+                    <a   class="btn btn-danger text-white" style="cursor:pointer">
+                        <i class="fa-solid fa-check" ></i>
                     </a>
-                    <a  onclick=Delete("/AdminPanel/VerifiedUser/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
-                    <i class="fas fa-trash-alt"></i>
+                    <a  onclick=ClickToUnlock("${data.id}") class="btn btn-danger text-white" style="cursor:pointer">
+                    <i class="fas fa-lock-open"></i> Unlock
+                    </a>
+                    </div>
+                        `
+                    }
+                    else {
+                        var str =""
+                        if (data.isVerified) {
+                            str=`
+                            <a onclick=ClickToVerify("${data.id}") class="btn btn-success text-white" style="cursor:pointer">
+                                                <i class="fa-solid fa-xmark"></i>
+                                                </a>
+                                `
+                        }
+                        else {
+                            str = `
+                                 <a onclick=ClickToVerify("${data.id}") class="btn btn-danger text-white" style="cursor:pointer">
+                                                <i class="fa-solid fa-check"></i>
+                                                </a>
+                                `
+                        }
+                        
+
+                        return `
+                    <div class="text-center">
+                    ${str}
+                    <a  onclick=ClickToUnlock("${data.id}") class="btn btn-success text-white" style="cursor:pointer">
+                    <i class="fas fa-lock"></i> Lock
                     </a>
                     </div>`
+                    }
+                    
                 },
-                "width":"30%"
+                "width":"40%"
             }
         ]
     })
 }
 
 
-function Delete(url) {
+/*function Delete(url) {
     swal({
         title: "Are you sure you want to delete?",
         text: "You will not be able to restore the data!",
@@ -78,4 +114,43 @@ function Delete(url) {
         }
         
     })
-}
+}*/
+function ClickToUnlock(id) {
+
+
+            $.ajax(
+                {
+                    type: "POST",
+                    url: '/AdminPanel/VerifiedUser/LockOrUnlock',
+                    data: JSON.stringify(id),
+                    contentType:"application/json",
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message);
+                            dataTable.ajax.reload();
+                        } else {
+                            toastr.error(data.message);
+                        }
+                    }
+                })
+        }
+function ClickToVerify(id) {
+ 
+
+            $.ajax(
+                {
+                    type: "POST",
+                    url: '/AdminPanel/VerifiedUser/ModifyRole',
+                    data: JSON.stringify(id),
+                    contentType:"application/json",
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message);
+                            dataTable.ajax.reload();
+                        } else {
+                            toastr.error(data.message);
+                        }
+                    }
+                })
+        }
+        

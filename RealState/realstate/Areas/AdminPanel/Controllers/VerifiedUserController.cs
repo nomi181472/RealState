@@ -63,6 +63,67 @@ namespace realstate.Areas.AdminPanel.Controllers
 
         #region API CALLS
             
+        [HttpPost]
+        public async Task<IActionResult> LockOrUnlock([FromBody] string id)
+        {
+            var entityFromDb = _unitOfWork.applicationUserRepoAccess.GetFirstOrDefault(x => x.Id == id);
+            if (entityFromDb==null)
+            {
+                return Json(new { success = false, message = "user not found" });
+            }
+            if(entityFromDb.LockoutEnd!=null && entityFromDb.LockoutEnd > DateTime.Now)
+            {
+                entityFromDb.LockoutEnd = DateTime.Now;
+            }
+            else
+            {
+                entityFromDb.LockoutEnd = DateTime.Now.AddDays(1000);
+              
+            }
+            await _unitOfWork.Save();
+            return Json(new { success = true, message = "Succeed" });
+        }
+         [HttpPost]
+        public async Task<IActionResult> ModifyRole([FromBody] string id)
+        {
+            var entityFromDb = await _userManager.FindByIdAsync(id);
+            
+           // var entityFromDb = _unitOfWork.applicationUserRepoAccess.GetFirstOrDefault(x => x.Id == id);
+            if (entityFromDb==null)
+            {
+                return Json(new { success = false, message = "user not found" });
+            }
+
+            var role=await _userManager.GetRolesAsync(entityFromDb);
+            if (role.Count > 0)
+            {
+                if(role.Contains(SD.AdminUser))
+                {
+                    return Json(new { success = false, message = "Admin role cannot be change" });
+                }
+                else if (role.Contains(SD.VerifiedUser))
+                {
+                    await _userManager.RemoveFromRoleAsync(entityFromDb, SD.VerifiedUser);
+                   
+                    
+                }
+                else
+                {
+                    await _userManager.AddToRoleAsync(entityFromDb, SD.VerifiedUser);
+                }
+            }
+            else
+            {
+                await _userManager.AddToRoleAsync(entityFromDb, SD.VerifiedUser);
+
+                await _userManager.AddToRoleAsync(entityFromDb, SD.RegisteredUser);
+            }
+
+            
+            //await _unitOfWork.Save();
+            return Json(new { success = true, message = "Succeed" });
+        }
+    
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -76,7 +137,8 @@ namespace realstate.Areas.AdminPanel.Controllers
                 applicationUser.Email = item.Email;
                 applicationUser.PhoneNumber = item.PhoneNumber;
                 applicationUser.UserName = item.UserName;
-                
+                applicationUser.LockoutEnd = item.LockoutEnd;
+                applicationUser.Id = item.Id;
                 applicationUser.IsVerified = _userManager.GetRolesAsync(item).Result.Any(x=>x==SD.VerifiedUser || x==SD.AdminUser);
                 users.Add(applicationUser);
             }

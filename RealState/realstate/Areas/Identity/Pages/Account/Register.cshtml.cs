@@ -126,7 +126,7 @@ namespace realstate.Areas.Identity.Pages.Account
 
                     if (Input.Role == null)
                     {
-                        await _userManager.AddToRoleAsync(newEntity, SD.VisitingUser);
+                        await _userManager.AddToRoleAsync(newEntity, SD.RegisteredUser);
                       
                     }
 

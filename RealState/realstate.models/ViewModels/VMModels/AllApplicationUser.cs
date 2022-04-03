@@ -12,6 +12,8 @@ namespace realstate.models.ViewModels.VMModels
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public bool IsVerified { get; set; }
-        
+        public bool Role { get; set; }
+        public string  Id { get; set; }
+        public DateTimeOffset? LockoutEnd { get; set; }
     }
 }
