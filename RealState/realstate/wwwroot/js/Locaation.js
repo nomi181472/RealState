@@ -26,10 +26,10 @@ function loadDatatable() {
                 "render": function (data) {
                     return `
                     <div class="text-center">
-                    <a href="/AdminPanel/Location/upsert/${data}" class="btn btn-success text-white" style="cursor:pointer">
+                    <a href="/AdminPanel/Location/upsert/${data}" class="btn btn-outline-success text-dark" style="cursor:pointer">
                     <i class="fas fa-edit"></i>
                     </a>
-                    <a  onclick=Delete("/AdminPanel/Location/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
+                    <a  onclick=Delete("/AdminPanel/Location/Delete/${data}") class="btn btn-outline-danger text-dark" style="cursor:pointer">
                     <i class="fas fa-trash-alt"></i>
                     </a>
                     </div>

@@ -45,10 +45,10 @@ function loadDatatable() {
                     if (lockout > today) {
                         return `
                     <div class="text-center">
-                    <a   class="btn btn-danger text-white" style="cursor:pointer">
+                    <a   class="btn btn-outline-danger text-dark" style="cursor:pointer">
                         <i class="fa-solid fa-check" ></i>
                     </a>
-                    <a  onclick=ClickToUnlock("${data.id}") class="btn btn-danger text-white" style="cursor:pointer">
+                    <a  onclick=ClickToUnlock("${data.id}") class="btn btn-outline-danger text-dark" style="cursor:pointer">
                     <i class="fas fa-lock-open"></i> Unlock
                     </a>
                     </div>
@@ -58,14 +58,14 @@ function loadDatatable() {
                         var str =""
                         if (data.isVerified) {
                             str=`
-                            <a onclick=ClickToVerify("${data.id}") class="btn btn-success text-white" style="cursor:pointer">
+                            <a onclick=ClickToVerify("${data.id}") class="btn btn-outline-success text-dark" style="cursor:pointer">
                                                 <i class="fa-solid fa-xmark"></i>
                                                 </a>
                                 `
                         }
                         else {
                             str = `
-                                 <a onclick=ClickToVerify("${data.id}") class="btn btn-danger text-white" style="cursor:pointer">
+                                 <a onclick=ClickToVerify("${data.id}") class="btn btn-outline-danger text-dark" style="cursor:pointer">
                                                 <i class="fa-solid fa-check"></i>
                                                 </a>
                                 `
