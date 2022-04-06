@@ -149,7 +149,7 @@ namespace realstate.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                       await _signInManager.SignInAsync(newEntity, isPersistent: true);
+                       await _signInManager.SignInAsync(newEntity, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }
                 }

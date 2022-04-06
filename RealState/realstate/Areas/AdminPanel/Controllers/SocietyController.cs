@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using realstate.dataaccess.Repository.IRepository;
 using realstate.models.ViewModels;
 using realstate.models.ViewModels.VMModels;
+using realstate.utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,7 @@ using System.Threading.Tasks;
 namespace realstate.Areas.AdminPanel.Controllers
 {
     [Area("AdminPanel")]
+    [Authorize(Roles = SD.AdminUser+","+SD.RegisteredUser+"," + SD.VerifiedUser)]
     public class SocietyController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

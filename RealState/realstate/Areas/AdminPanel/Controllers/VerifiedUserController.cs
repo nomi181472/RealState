@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using realstate.dataaccess.Repository.IRepository;
 using realstate.models.ViewModels;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace realstate.Areas.AdminPanel.Controllers
 {
+    [Authorize(Roles = SD.AdminUser )]
     [Area("AdminPanel")]
     public class VerifiedUserController : Controller
     {
