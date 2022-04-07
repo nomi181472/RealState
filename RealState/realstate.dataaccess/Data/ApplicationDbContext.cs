@@ -20,5 +20,6 @@ namespace realstate.dataaccess.Data
         public DbSet<ApplicationUser> ApplicationUserTBL { get; set; }
         public DbSet<VerifiedUser> VerifiedUserTBL { get; set; }
         public DbSet<Plot> PlotTBL { get; set; }
+        public DbSet<Photo> PhotoTBL { get; set; }
     }
 }
