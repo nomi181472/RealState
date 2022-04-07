@@ -20,6 +20,8 @@ namespace realstate.dataaccess.Repository
 
         public IVerifiedUserRepository verifiedUserRepoAccess { get; private set; }
 
+        public IPlotRepository plotRepoAccess { get; private set; }
+
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -29,6 +31,7 @@ namespace realstate.dataaccess.Repository
             societyRepoAccess = new SocietyRepository(_db);
             verifiedUserRepoAccess = new VerifiedUserRepository(_db);
             applicationUserRepoAccess = new ApplicationUserRepository(_db);
+            plotRepoAccess = new PlotRepository(_db);
         }
          public  async Task Save()
         {
