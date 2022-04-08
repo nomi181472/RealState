@@ -14,6 +14,7 @@ namespace realstate.dataaccess.Repository.IRepository
         IVerifiedUserRepository verifiedUserRepoAccess { get; }
         IPlotRepository plotRepoAccess { get; }
         IApplicationUserRepository applicationUserRepoAccess { get; }
+        IPhotoRepository photoRepoAccess { get; }
         Task Save();
         ISP_Call sP_Call { get; }
     }

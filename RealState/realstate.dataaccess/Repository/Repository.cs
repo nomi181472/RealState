@@ -23,6 +23,10 @@ namespace realstate.dataaccess.Repository
         {
             dbset.Add(entity);
         }
+        public T SetAndGet(T entity)
+        {
+           return dbset.Add(entity).Entity;
+        }
 
         public T Get(int id)
         {

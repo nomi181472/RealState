@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using realstate.dataaccess.Repository.IRepository;
@@ -9,6 +10,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using realstate.DTOs;
 
 namespace realstate.Areas.AdminPanel.Controllers
 {
@@ -16,13 +22,27 @@ namespace realstate.Areas.AdminPanel.Controllers
     public class PlotController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public PlotController(IUnitOfWork unitOfWork)
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IConfiguration _configuration;
+        public PlotController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager,IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
+            _userManager= userManager;
+            _configuration = configuration;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            string userId = _userManager.GetUserId(User);
+            var entities =  _unitOfWork.photoRepoAccess.GetAll(x=>x.PlotTBL.UserId== userId, includeProperties: "PlotTBL");
+           // var mappedEntities=ModelConversion.ModelConversionUsingJSONMultple<Plot, AddPlotAndPhotos>(entities.ToList());
+            /*foreach (var item in entities)
+            {
+                var mappedEntity= ModelConversion.ModelConversionUsingJSON<Plot, AddPlotAndPhotos>(item.PlotTBL);
+                
+
+
+            }*/
+            return View(entities);
         }
         public IActionResult AddPlotAndPhotos()
         {
@@ -54,20 +74,73 @@ namespace realstate.Areas.AdminPanel.Controllers
 
             return View(addPlotAndPhotos);
         }
+        private List<string> CopyImages(List<IFormFile> postedFiles,string userId)
+        {
+            string imagesPath = Path.Combine(Environment.CurrentDirectory, "Images");
+            if (!Directory.Exists(imagesPath))
+            {
+                Directory.CreateDirectory(imagesPath);
+            }
+            List<string> actualPaths = new List<string>();
+
+            foreach (var postedFile in postedFiles)
+            {
+                var actualPath = Path.Combine(imagesPath, Guid.NewGuid().ToString() + postedFile.FileName);
+                using (FileStream stream = new FileStream(actualPath, FileMode.Create))
+                {
+                    postedFile.CopyTo(stream);
+                    actualPaths.Add(actualPath);
+
+                }
+                
+            }
+            return actualPaths;
+        }
+        private async Task AddPhotosInDatabase(List<string> urls,int plotId)
+        {
+            var config=_configuration.GetSection("CloudinaryConfig").Get<CloudinaryConfigDTO>();
+            PhotosUploder photosUploder = new PhotosUploder(config.CloudName,config.ApiKey,config.ApiSecret);
+            var uploadedPhotos = await photosUploder.MultipleUploadPhotos(urls);
+            foreach (var photo in uploadedPhotos)
+            {
+                Photo photoObj = new Photo();
+                photoObj.IsActive = true;
+                photoObj.PublicURL = photo.SecureUrl.AbsoluteUri;
+                photoObj.PlotId = plotId;
+                _unitOfWork.photoRepoAccess.Add(photoObj);
+
+
+
+            }
+           await _unitOfWork.Save();
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upsert(Plot entity)
+        public async Task<IActionResult> Upsert(AddPlotAndPhotos entity, List<IFormFile> postedFiles)
         {
+
+            string userId = _userManager.GetUserId(User);
+            Plot temp2 = new Plot();
             if (ModelState.IsValid)
             {
+
                 if (entity.PlotId == 0)
                 {
-                    _unitOfWork.plotRepoAccess.Add(entity);
+                   
+                    Plot temp = ModelConversion.ModelConversionUsingJSON<AddPlotAndPhotos, Plot>(entity);
+                    temp.UserId = userId;// _userManager.GetUserId(User); 
+                    var plotId = _unitOfWork.plotRepoAccess.SetAndGet(temp).PlotId;
                     await _unitOfWork.Save();
+                    if (postedFiles.Count > 0)
+                    {
+                        var urls = CopyImages(postedFiles, userId);
+                        await AddPhotosInDatabase(urls, temp.PlotId);
+                    }
+                    
                 }
                 else
                 {
-                   await _unitOfWork.plotRepoAccess.Update(entity);//already saving inside
+                   await _unitOfWork.plotRepoAccess.Update(temp2);//already saving inside
                 }
                
                 return RedirectToAction(nameof(Index));

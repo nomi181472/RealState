@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using realstate.dataaccess.Data;
 
 namespace realstate.dataaccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220408193512_PlotTBLUserIdPropertyAdded")]
+    partial class PlotTBLUserIdPropertyAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -258,8 +260,8 @@ namespace realstate.dataaccess.Migrations
                     b.Property<int>("PlotId")
                         .HasColumnType("int");
 
-                    b.Property<string>("PublicURL")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PublicURL")
+                        .HasColumnType("int");
 
                     b.HasKey("PhotoId");
 

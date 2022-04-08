@@ -1,18 +1,19 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace realstate.models.ViewModels
+namespace realstate.models.ViewModels.VMModels
 {
-   public class Plot
+   public class AddPlotAndPhotos
     {
-        [Key]
-        public int PlotId { get; set; }
         
+        public int PlotId { get; set; }
+        [Required]
+        public int SocietyId { get; set; }
         [Required]
         public double PlotSize { get; set; } //TODO Multiple units
         [Required]
@@ -21,16 +22,11 @@ namespace realstate.models.ViewModels
         public string Block { get; set; }
         [Required]
         public double Price { get; set; }
+        public string[] ImagePaths { get; set; }
 
         public string Description { get; set; }
-        [Required]
-        public int SocietyId { get; set; }
-        [ForeignKey(nameof(SocietyId))]
-        public Society SocietyTBL { get; set; }
 
-        [Required]
-        public string UserId { get; set; }
-        [ForeignKey(nameof(UserId))]
-        public ApplicationUser ApplicationUserTBL { get; set; }
+    
+        public IEnumerable<SelectListItem> allSocieties { get; set; }
     }
 }

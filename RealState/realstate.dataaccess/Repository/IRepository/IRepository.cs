@@ -20,6 +20,7 @@ namespace realstate.dataaccess.Repository.IRepository
             string includeProperties = null
             );
         void Add(T entity);
+        public T SetAndGet(T entity);
         void Remove(T entity);
         void Remove(int id);
         void RemoveRange(IEnumerable<T> entities);

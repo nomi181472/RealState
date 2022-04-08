@@ -15,7 +15,7 @@ namespace realstate.models.ViewModels
         public int PlotId { get; set; }
         [ForeignKey(nameof(PlotId))]
         public Plot PlotTBL { get; set; }
-        public int PublicURL { get; set; }
+        public string PublicURL { get; set; }
         public bool IsActive { get; set; }
 
 
