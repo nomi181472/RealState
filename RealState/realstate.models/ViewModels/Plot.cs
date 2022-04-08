@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -9,9 +10,19 @@ namespace realstate.models.ViewModels
 {
    public class Plot
     {
+        [Key]
         public int PlotId { get; set; }
+        [Required]
         public int SocietyId { get; set; }
-        public double Area { get; set; }
+        [Required]
+        public double PlotSize { get; set; } //TODO Multiple units
+        [Required]
+        public string CompleteAddress { get; set; }
+        [Required]
+        public string Block { get; set; }
+        [Required]
+        public double Price { get; set; }
+
         public string Description { get; set; }
 
         [ForeignKey(nameof(SocietyId))]

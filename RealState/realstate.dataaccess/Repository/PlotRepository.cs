@@ -23,7 +23,7 @@ namespace realstate.dataaccess.Repository
             var entityFromDb=_db.PlotTBL.FirstOrDefault(x => x.PlotId == entity.PlotId);
             if (entityFromDb != null)
             {
-                entityFromDb.Area = entity.Area;
+                //entityFromDb.Area = entity.Area;
                 entityFromDb.Description = entity.Description;
                 //TODO:many things can be modified
                 await _db.SaveChangesAsync();
