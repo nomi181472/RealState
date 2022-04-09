@@ -1,9 +1,126 @@
-﻿@model realstate.models.ViewModels.VMModels.AddPlotAndPhotos
-
+﻿@model Dictionary<int,List<realstate.models.ViewModels.Photo>>
+@using realstate.utility;
 @{
+    ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var altImage= "https://www.feednavigator.com/var/wrbm_gb_food_pharma/storage/images/9/2/8/5/235829-6-eng-GB/Feed-Test-SIC-Feed-20142.jpg";
+    var keys = Model.Keys.ToList();
+    var verifiedHighlight ="border-primary";
+    Photo plotData = null;
 }
 
-<h4>Add Plot</h4>
+<style>
+    .card {
+        position: relative;
+    }
+
+        .card .card-badge {
+            position: absolute;
+            top: -10px;
+            left: -30px;
+            padding: 5px;
+            background: #ce210e;
+            color: white;
+            transform: rotate(-20deg);
+        }
+</style>
+<div class="container">
+    @for (int i=0;i<keys.Count;)
+    {
+       
+
+    <div class="row bg-light p-3">
+
+        @for (int j = 0; j < 3 && i < keys.Count; j++)
+        {
+            var plotId = keys[i];
+            plotData = Model[plotId].FirstOrDefault();
+            <div class="col-sm-12 col-md-4 h-100">
+                <div class="card @verifiedHighlight">
+
+                    <img class="card-img-top img-thumbnail img-fluid" style="height:400px;" src="@plotData.PublicURL??@altImage" alt="Image not available">
+
+                    <div class="card-body">
+                        <div class="text-center">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-4 h-100">
+                                    <Label class="card-title fw-bold">SocietyName</Label>
+                                </div>
+                                <div class="col-sm-12 col-md-4 h-100">
+                                    <Label class="card-title fw-bold">:</Label>
+                                </div>
+                                <div class="col-sm-12 col-md-4 h-100">
+                                    <h5 class="card-title overflow-hidden">@plotData.PlotTBL?.SocietyTBL.Name.ToUpper()</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-4 h-100">
+                                    <Label class="card-title fw-bold">Block </Label>
+                                </div>
+                                <div class="col-sm-12 col-md-4 h-100">
+                                    <Label class="card-title fw-bold">:</Label>
+                                </div>
+                                <div class="col-sm-12 col-md-4 h-100">
+                                    <h5 class="card-title overflow-hidden">@plotData.PlotTBL?.Block</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-4 h-100">
+                                    <Label class="card-title fw-bold">Price </Label>
+                                </div>
+                                <div class="col-sm-12 col-md-4 h-100">
+                                    <Label class="card-title fw-bold">:</Label>
+                                </div>
+                                <div class="col-sm-12 col-md-4 h-100">
+                                    <h5 class="card-title overflow-hidden ">@plotData.PlotTBL?.Price<small style="font-size:10px;">Marla</small></h5>
+                                </div>
+                            </div>
+
+                            @* <textarea disabled class="card-text overflow-auto" style="min-height:200px; width:150px; max-height:300px; max-width:300px">@plotData.PlotTBL?.Description</textarea>*@
 
 
+                            <a href="#" class="btn btn-outline-primary pr-lg-5">Detail</a>
+                            <a href="#" class="btn btn-outline-danger  pr-lg-5">Delete</a>
+
+                        </div>
+                    </div>
+                    @if (plotData.PlotTBL.ApplicationUserTBL.Roles.Contains(SD.VerifiedUser))
+                    {
+                    <span class="card-badge badge badge-primary" >Verified Agent</span>
+                    }
+                </div>
+            </div>
+
+            i++;
+        }
+
+
+        @*<div class="col-sm-12 col-md-4">
+            <div class="card">
+                <img class="card-img-top" src="" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <div class="card">
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+            </div>
+        </div>*@
+    </div>
+
+
+
+        <div class="divider py-4 bg-light"></div>
+
+    }
+
+</div>

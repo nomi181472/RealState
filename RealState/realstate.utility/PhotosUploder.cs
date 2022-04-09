@@ -28,10 +28,10 @@ namespace realstate.utility
                 };
                 return await _Cloudinary.UploadAsync(uploadParams);
             }
-            catch (Exception e)
+            catch (Exception )
             {
 
-                throw e; //TODO: custom exception when we decided it is working fine;
+                throw; //TODO: custom exception when we decided it is working fine;
             }  
         }
         public async  Task<List<ImageUploadResult>> MultipleUploadPhotos(List<string> imagePaths)
@@ -51,10 +51,10 @@ namespace realstate.utility
                
                  
             }
-            catch (Exception e)
+            catch (Exception )
             {
 
-                throw e; //TODO: custom exception when we decided it is working fine;
+                throw ; //TODO: custom exception when we decided it is working fine;
             }  
         }
     }

@@ -29,4 +29,11 @@ namespace realstate.models.ViewModels.VMModels
     
         public IEnumerable<SelectListItem> allSocieties { get; set; }
     }
+    public class PlotCompleteDetails
+    {
+        public List<Photo> photos { get; set; }
+        public List<string> Role { get; set; }
+
+
+    }
 }

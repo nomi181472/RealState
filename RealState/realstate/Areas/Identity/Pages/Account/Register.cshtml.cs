@@ -97,7 +97,6 @@ namespace realstate.Areas.Identity.Pages.Account
                     UserName = Input.Email,
                     Email = Input.Email,
                     PhoneNumber = Input.PhoneNumber,
-                    Role = Input.Role,
                     VerifiedUserId = Input.VerifiedUserId,
 
                 };

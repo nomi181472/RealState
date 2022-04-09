@@ -18,7 +18,7 @@ namespace realstate.models.ViewModels
         public VerifiedUser VerifiedUserTBL { get; set; }
 
         [NotMapped]
-        public string Role { get; set; }
+        public  List<string> Roles { get; set; }
        
 
 

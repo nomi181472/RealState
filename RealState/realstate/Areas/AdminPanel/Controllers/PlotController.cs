@@ -15,34 +15,62 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using realstate.DTOs;
+using realstate.dataaccess.Data;
 
 namespace realstate.Areas.AdminPanel.Controllers
 {
     [Area("AdminPanel")]
+    [Authorize(Roles = SD.AdminUser + "," + SD.RegisteredUser + "," + SD.VerifiedUser)]
     public class PlotController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
-        public PlotController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager,IConfiguration configuration)
+        private readonly ApplicationDbContext _db;
+        public PlotController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager,IConfiguration configuration,ApplicationDbContext db)
         {
             _unitOfWork = unitOfWork;
             _userManager= userManager;
             _configuration = configuration;
+            _db = db;
         }
+        /*
+            * (from ep in dbContext.tbl_EntryPoint
+                join e in dbContext.tbl_Entry on ep.EID equals e.EID
+                join t in dbContext.tbl_Title on e.TID equals t.TID
+                where e.OwnerID == user.UID
+                select new {
+                    UID = e.OwnerID,
+                    TID = e.TID,
+                    Title = t.Title,
+                    EID = e.EID
+                })
+            */
+        /*var data=(from photo in _db.PhotoTBL
+        join plot in _db.PlotTBL on photo.PlotId equals plot.PlotId
+        join usermodel in _db.ApplicationUserTBL on plot.UserId equals usermodel.Id
+        where plot.UserId == userId
+        select new PlotCompleteDetails()
+        {
+            photo = photo,
+            user = usermodel,
+            plot=plot
+        });*/
         public async Task<IActionResult> Index()
         {
-            string userId = _userManager.GetUserId(User);
-            var entities =  _unitOfWork.photoRepoAccess.GetAll(x=>x.PlotTBL.UserId== userId, includeProperties: "PlotTBL");
-           // var mappedEntities=ModelConversion.ModelConversionUsingJSONMultple<Plot, AddPlotAndPhotos>(entities.ToList());
-            /*foreach (var item in entities)
-            {
-                var mappedEntity= ModelConversion.ModelConversionUsingJSON<Plot, AddPlotAndPhotos>(item.PlotTBL);
-                
+            var user = await _userManager.GetUserAsync(User);
+            string userId = user.Id.ToString();
+            var Roles = _userManager.GetRolesAsync(user).Result.ToList();
+            var entities = _unitOfWork.photoRepoAccess.GetAll(x => x.PlotTBL.UserId == userId, includeProperties: "PlotTBL")
+                .Select(x=> {
+                    x.PlotTBL.ApplicationUserTBL = new ApplicationUser() { Roles = Roles };
+                    x.PlotTBL.SocietyTBL = _unitOfWork.societyRepoAccess.GetFirstOrDefault(s => s.SocietyId == x.PlotTBL.SocietyId);
+                    return x;
+                    });
 
-
-            }*/
-            return View(entities);
+            var groupByPlotId = entities.GroupBy(x => x.PlotId).ToDictionary(x=>x.Key,x=>x.ToList());
+           
+            return View(groupByPlotId);
         }
         public IActionResult AddPlotAndPhotos()
         {
