@@ -53,6 +53,17 @@ namespace realstate.dataaccess.Repository
             }
             return query.ToList();
         }
+        public Tuple<List<T>,decimal> GetAllWithPagination(int page,decimal pageResult)
+        {
+            IQueryable<T> query = dbset;
+
+            
+            int totalPost =query.Count();
+            var pageCount = Math.Ceiling(totalPost / pageResult);
+            var entities = query.Skip((page - 1) * (int)pageResult).Take((int)pageResult).ToList();
+            return Tuple.Create(entities, pageCount);
+            
+        }
 
         public T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null)
         {

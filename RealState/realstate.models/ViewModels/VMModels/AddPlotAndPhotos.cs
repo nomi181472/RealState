@@ -14,6 +14,8 @@ namespace realstate.models.ViewModels.VMModels
         public int PlotId { get; set; }
         [Required]
         public int SocietyId { get; set; }
+        public string UserId { get; set; }
+        public string SocietyName { get; set; }
         [Required]
         public double PlotSize { get; set; } //TODO Multiple units
         [Required]
@@ -23,6 +25,7 @@ namespace realstate.models.ViewModels.VMModels
         [Required]
         public double Price { get; set; }
         public string[] ImagePaths { get; set; }
+        public List<string> PhotosUrl { get; set; }
 
         public string Description { get; set; }
 

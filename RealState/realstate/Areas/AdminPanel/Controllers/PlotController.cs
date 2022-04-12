@@ -56,6 +56,120 @@ namespace realstate.Areas.AdminPanel.Controllers
             user = usermodel,
             plot=plot
         });*/
+        [AllowAnonymous]
+        public async Task<IActionResult> Plots()
+        {
+            //getall plots
+            var plots = _unitOfWork.plotRepoAccess.GetAll();
+            
+           
+            List<ListPlotsToAnyone> listPlots = new List<ListPlotsToAnyone>();
+            var verifiedUsers = _userManager.GetUsersInRoleAsync(SD.VerifiedUser).Result.ToList();
+            foreach (var item in plots)
+            {
+                ListPlotsToAnyone listPlotsToAnyone = new ListPlotsToAnyone();
+                var photos = _unitOfWork.photoRepoAccess.GetAll(x => x.PlotId == item.PlotId);
+                
+                listPlotsToAnyone.Photos = photos.ToList();
+                listPlotsToAnyone._Plot = item;
+                listPlotsToAnyone._Plot.SocietyTBL= _unitOfWork.societyRepoAccess.GetFirstOrDefault(s => s.SocietyId == item.SocietyId);
+                listPlotsToAnyone.IsVerified = verifiedUsers.Exists(x => x.Id == item.UserId); ;
+
+
+                listPlots.Add(listPlotsToAnyone);
+                    
+            }
+            return View(listPlots);
+
+            //then get verifiedusers
+            //
+
+            /*var entities = _unitOfWork.photoRepoAccess.GetAll(includeProperties: "PlotTBL")
+                .Select(x => {
+                    x.PlotTBL.SocietyTBL = _unitOfWork.societyRepoAccess.GetFirstOrDefault(s => s.SocietyId == x.PlotTBL.SocietyId);
+                    return x;
+                });
+            var groupByUserId = entities.GroupBy(x => x.PlotTBL.UserId)
+                .ToDictionary(x => x.Key, x => x.ToList()
+                .GroupBy(i=>i.PlotId).ToDictionary(i=>i.Key,i=>i.ToList())
+                );
+           
+            Dictionary<string, ListPlotsToAnyone> userIdPlotsDict = new Dictionary<string, ListPlotsToAnyone>();
+            foreach (var userId in groupByUserId.Keys)
+            {
+                bool isVerified  = verifiedUsers.Exists(x => x.Id == userId);
+                foreach (var plotId in groupByUserId[userId].Keys)
+                {
+                    List<Photo> photos = groupByUserId[userId][plotId];
+                    Plot plot = photos.FirstOrDefault().PlotTBL;
+                    userIdPlotsDict.Add(userId, new ListPlotsToAnyone() { IsVerified = isVerified, Plot = plot, Photos = photos });
+                }
+                
+                
+            }
+            return View(userIdPlotsDict);*/
+        }
+        [AllowAnonymous]
+        public async Task<IActionResult> PlotsWithPagination(int page=1)
+        {
+            if (page == 0)
+            {
+                return NoContent();
+            }
+            //getall plots
+            var tuple= _unitOfWork.plotRepoAccess.GetAllWithPagination(page,pageResult:3);
+            var plots = tuple.Item1;
+
+            ViewBag.currentPage = page;
+            ViewBag.pageCount = tuple.Item2; ;
+
+            //ViewBag.Count=
+            List<ListPlotsToAnyone> listPlots = new List<ListPlotsToAnyone>();
+            var verifiedUsers = _userManager.GetUsersInRoleAsync(SD.VerifiedUser).Result.ToList();
+            foreach (var item in plots)
+            {
+                ListPlotsToAnyone listPlotsToAnyone = new ListPlotsToAnyone();
+                var photos = _unitOfWork.photoRepoAccess.GetAll(x => x.PlotId == item.PlotId);
+                
+                listPlotsToAnyone.Photos = photos.ToList();
+                listPlotsToAnyone._Plot = item;
+                listPlotsToAnyone._Plot.SocietyTBL= _unitOfWork.societyRepoAccess.GetFirstOrDefault(s => s.SocietyId == item.SocietyId);
+                listPlotsToAnyone.IsVerified = verifiedUsers.Exists(x => x.Id == item.UserId); ;
+
+
+                listPlots.Add(listPlotsToAnyone);
+                    
+            }
+            return View(listPlots);
+
+            //then get verifiedusers
+            //
+
+            /*var entities = _unitOfWork.photoRepoAccess.GetAll(includeProperties: "PlotTBL")
+                .Select(x => {
+                    x.PlotTBL.SocietyTBL = _unitOfWork.societyRepoAccess.GetFirstOrDefault(s => s.SocietyId == x.PlotTBL.SocietyId);
+                    return x;
+                });
+            var groupByUserId = entities.GroupBy(x => x.PlotTBL.UserId)
+                .ToDictionary(x => x.Key, x => x.ToList()
+                .GroupBy(i=>i.PlotId).ToDictionary(i=>i.Key,i=>i.ToList())
+                );
+           
+            Dictionary<string, ListPlotsToAnyone> userIdPlotsDict = new Dictionary<string, ListPlotsToAnyone>();
+            foreach (var userId in groupByUserId.Keys)
+            {
+                bool isVerified  = verifiedUsers.Exists(x => x.Id == userId);
+                foreach (var plotId in groupByUserId[userId].Keys)
+                {
+                    List<Photo> photos = groupByUserId[userId][plotId];
+                    Plot plot = photos.FirstOrDefault().PlotTBL;
+                    userIdPlotsDict.Add(userId, new ListPlotsToAnyone() { IsVerified = isVerified, Plot = plot, Photos = photos });
+                }
+                
+                
+            }
+            return View(userIdPlotsDict);*/
+        }
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -76,13 +190,18 @@ namespace realstate.Areas.AdminPanel.Controllers
         {
             return View();
         }
-        public IActionResult Upsert(int? id)
+        
+        public IActionResult Update(int? id)
         {
+
             AddPlotAndPhotos addPlotAndPhotos = new AddPlotAndPhotos();
+            addPlotAndPhotos.PlotId = id.GetValueOrDefault();
+
             Plot entity = new Plot();
             Society society = new Society();
-            if (id != null) {
-                return View(entity);
+            if (id != 0 || id != null)
+            {
+
                 entity = _unitOfWork.plotRepoAccess.Get(id.GetValueOrDefault());
                 if (entity != null)
                 {
@@ -91,13 +210,120 @@ namespace realstate.Areas.AdminPanel.Controllers
                     addPlotAndPhotos.Block = entity.Block;
                     addPlotAndPhotos.Description = entity.Description;
                     addPlotAndPhotos.Price = entity.Price;
-                    addPlotAndPhotos.Price = entity.Price;
+                    addPlotAndPhotos.SocietyId = entity.SocietyId;
+                    var allSocities = _unitOfWork.societyRepoAccess.GetFirstOrDefault(x => x.SocietyId == entity.SocietyId);
+                    addPlotAndPhotos.SocietyName = allSocities.Name;
+                    addPlotAndPhotos.UserId = entity.UserId;
+                    addPlotAndPhotos.PhotosUrl = _unitOfWork.photoRepoAccess.GetAll(x => x.PlotId == id.GetValueOrDefault()).Select(x => x.PublicURL).ToList();
+                    //addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
                 }
+            }
+           
+            return View(addPlotAndPhotos);
+
+        }
+        public IActionResult DetailSec(int? id)
+        {
+
+            AddPlotAndPhotos addPlotAndPhotos = new AddPlotAndPhotos();
+            addPlotAndPhotos.PlotId = id.GetValueOrDefault();
+            Plot entity = new Plot();
+            Society society = new Society();
+            if (id != 0 || id != null)
+            {
+
+                entity = _unitOfWork.plotRepoAccess.Get(id.GetValueOrDefault());
+                if (entity != null)
+                {
+                    addPlotAndPhotos.PlotSize = entity.PlotSize;
+                    addPlotAndPhotos.CompleteAddress = entity.CompleteAddress;
+                    addPlotAndPhotos.Block = entity.Block;
+                    addPlotAndPhotos.Description = entity.Description;
+                    addPlotAndPhotos.Price = entity.Price;
+                    addPlotAndPhotos.SocietyId = entity.SocietyId;
+                    var allSocities = _unitOfWork.societyRepoAccess.GetFirstOrDefault(x => x.SocietyId == entity.SocietyId);
+                    addPlotAndPhotos.SocietyName = allSocities.Name;
+
+                    addPlotAndPhotos.PhotosUrl = _unitOfWork.photoRepoAccess.GetAll(x => x.PlotId == id.GetValueOrDefault()).Select(x => x.PublicURL).ToList();
+                    //addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
+                }
+            }
+            else
+            {
+
+                var allSocities = _unitOfWork.societyRepoAccess.GetAll();
+                addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
+            }
+            return View(addPlotAndPhotos);
+
+        }
+        [AllowAnonymous]
+        public IActionResult Detail(int? id)
+        {
+            
+            AddPlotAndPhotos addPlotAndPhotos = new AddPlotAndPhotos();
+            addPlotAndPhotos.PlotId = id.GetValueOrDefault();
+            Plot entity = new Plot();
+            Society society = new Society();
+            if (id != 0 || id != null)
+            {
+
+                entity = _unitOfWork.plotRepoAccess.Get(id.GetValueOrDefault());
+                if (entity != null)
+                {
+                    addPlotAndPhotos.PlotSize = entity.PlotSize;
+                    addPlotAndPhotos.CompleteAddress = entity.CompleteAddress;
+                    addPlotAndPhotos.Block = entity.Block;
+                    addPlotAndPhotos.Description = entity.Description;
+                    addPlotAndPhotos.Price = entity.Price;
+                    addPlotAndPhotos.SocietyId = entity.SocietyId;
+                    var allSocities = _unitOfWork.societyRepoAccess.GetFirstOrDefault(x => x.SocietyId == entity.SocietyId);
+                    addPlotAndPhotos.SocietyName = allSocities.Name;
+                    
+                    addPlotAndPhotos.PhotosUrl = _unitOfWork.photoRepoAccess.GetAll(x => x.PlotId == id.GetValueOrDefault()).Select(x => x.PublicURL).ToList();
+                    //addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
+                }
+            }
+            else
+            {
+
+                var allSocities = _unitOfWork.societyRepoAccess.GetAll();
+                addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
+            }
+            return View(addPlotAndPhotos);
+            
+        }
+        public IActionResult Upsert(int? id)
+        {
+            AddPlotAndPhotos addPlotAndPhotos = new AddPlotAndPhotos();
+            Plot entity = new Plot();
+            Society society = new Society();
+            if (id != 0 && id != null)
+            {
+
+                entity = _unitOfWork.plotRepoAccess.Get(id.GetValueOrDefault());
+                if (entity != null)
+                {
+                    addPlotAndPhotos.PlotSize = entity.PlotSize;
+                    addPlotAndPhotos.CompleteAddress = entity.CompleteAddress;
+                    addPlotAndPhotos.Block = entity.Block;
+                    addPlotAndPhotos.Description = entity.Description;
+                    addPlotAndPhotos.Price = entity.Price;
+                    addPlotAndPhotos.SocietyId = entity.SocietyId;
+                    var allSocities = _unitOfWork.societyRepoAccess.GetFirstOrDefault(x=>x.SocietyId==entity.SocietyId);
+                    addPlotAndPhotos.SocietyName= allSocities.Name;
+                    //addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
+
+                }
+            }
+            else
+            {
+
+                var allSocities = _unitOfWork.societyRepoAccess.GetAll();
+                addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
             }
 
 
-            var allSocities = _unitOfWork.societyRepoAccess.GetAll();
-            addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
             
 
             return View(addPlotAndPhotos);
@@ -148,54 +374,69 @@ namespace realstate.Areas.AdminPanel.Controllers
         {
 
             string userId = _userManager.GetUserId(User);
-            Plot temp2 = new Plot();
+            Plot temp = null;
+            string redirect = nameof(Index);
             if (ModelState.IsValid)
             {
 
                 if (entity.PlotId == 0)
                 {
                    
-                    Plot temp = ModelConversion.ModelConversionUsingJSON<AddPlotAndPhotos, Plot>(entity);
+                     temp = ModelConversion.ModelConversionUsingJSON<AddPlotAndPhotos, Plot>(entity);
                     temp.UserId = userId;// _userManager.GetUserId(User); 
                     var plotId = _unitOfWork.plotRepoAccess.SetAndGet(temp).PlotId;
-                    await _unitOfWork.Save();
-                    if (postedFiles.Count > 0)
-                    {
-                        var urls = CopyImages(postedFiles, userId);
-                        await AddPhotosInDatabase(urls, temp.PlotId);
-                    }
+                    
                     
                 }
                 else
                 {
-                   await _unitOfWork.plotRepoAccess.Update(temp2);//already saving inside
+                    if (userId == entity.UserId )
+                    {
+                        temp = ModelConversion.ModelConversionUsingJSON<AddPlotAndPhotos, Plot>(entity);
+                        await _unitOfWork.plotRepoAccess.Update(temp); //already saving inside
+                        
+                    }
+                    else
+                    {
+                        return Unauthorized();
+                    }
                 }
-               
-                return RedirectToAction(nameof(Index));
+                await _unitOfWork.Save();
+                if (postedFiles.Count > 0)
+                {
+                    var urls = CopyImages(postedFiles, userId);
+                    await AddPhotosInDatabase(urls, temp.PlotId);
+                }
+                return RedirectToAction(redirect);
             }
             return View(entity);
         }
 
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            var entityFromDB = _unitOfWork.plotRepoAccess.Get(id.GetValueOrDefault());
+            if (entityFromDB == null)
+            {
+                return Redirect(nameof(Index));
+            }
+            _unitOfWork.plotRepoAccess.Remove(entityFromDB);
+            await _unitOfWork.Save();
+            return RedirectToAction(nameof(Index));
+        }
+
+
+
         #region API CALLS
-            
+
         [HttpGet]
         public IActionResult GetAll()
         {
             var entitiesFromDB = _unitOfWork.plotRepoAccess.GetAll();
             return Json(new { data= entitiesFromDB });
         }
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var entityFromDB = _unitOfWork.plotRepoAccess.Get(id);
-            if (entityFromDB==null)
-            {
-                return Json(new { Success = false, message = "Error while deleting" });
-            }
-            _unitOfWork.plotRepoAccess.Remove(entityFromDB);
-            await _unitOfWork.Save();
-            return Json(new { success=true, message = "Delete Successful" });
-        }
+        
+        
         #endregion
     }
 }

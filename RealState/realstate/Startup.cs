@@ -74,7 +74,7 @@ namespace realstate
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{area=User}/{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{area=AdminPanel}/{controller=Plot}/{action=PlotsWithPagination}/{id?}");
                 endpoints.MapRazorPages();
             });
         }

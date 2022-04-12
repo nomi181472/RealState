@@ -24,7 +24,12 @@ namespace realstate.dataaccess.Repository
             if (entityFromDb != null)
             {
                 //entityFromDb.Area = entity.Area;
-                entityFromDb.Description = entity.Description;
+                entityFromDb.PlotSize = entity.PlotSize;
+                entityFromDb.CompleteAddress = entity.CompleteAddress;
+                entityFromDb.Block  = entity.Block;
+                entityFromDb.Description= entity.Description;
+                entityFromDb.Price = entity.Price;
+                //entityFromDb.Description = entity.Description;
                 //TODO:many things can be modified
                 await _db.SaveChangesAsync();
             }

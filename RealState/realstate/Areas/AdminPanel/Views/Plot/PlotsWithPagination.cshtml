@@ -1,16 +1,16 @@
-﻿@model Dictionary<int, List<realstate.models.ViewModels.Photo>>
+﻿@model List<realstate.models.ViewModels.VMModels.ListPlotsToAnyone>
 @using realstate.utility;
 @{
-    ViewData["Title"] = "My Plots";
+    ViewData["Title"] = "All Posts";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var altImage = "https://www.feednavigator.com/var/wrbm_gb_food_pharma/storage/images/9/2/8/5/235829-6-eng-GB/Feed-Test-SIC-Feed-20142.jpg";
-    var keys = Model.Keys.ToList();
     var verifiedHighlight = "border-primary";
-    Photo plotData = null;
+    int currentPage =Convert.ToInt32(ViewBag.currentPage);
+    int pageCount = Convert.ToInt32(ViewBag.pageCount);
+  
+
 }
-@{
-    await Html.RenderPartialAsync("BreadCrumbPartialView", new string[] { "MyPosts" });
-}
+
 <style>
     .card {
         position: relative;
@@ -26,21 +26,24 @@
             transform: rotate(-20deg);
         }
 </style>
+@{
+    await Html.RenderPartialAsync("BreadCrumbPartialView", new string[] { });
+}
 <div class="container">
-    @for (int i = 0; i < keys.Count;)
+    @for (int i = 0; i < Model.Count;)
     {
 
 
         <div class="row bg-light p-3">
 
-            @for (int j = 0; j < 3 && i < keys.Count; j++)
+            @for (int j = 0; j < 3 && i < Model.Count; j++)
             {
-                var plotId = keys[i];
-                plotData = Model[plotId].FirstOrDefault();
+
+
                 <div class="col-sm-12 col-md-4 h-100">
                     <div class="card @verifiedHighlight">
 
-                        <img class="card-img-top img-thumbnail img-fluid" style="height:400px;" src="@plotData.PublicURL??@altImage" alt="Image not available">
+                        <img class="card-img-top img-thumbnail img-fluid" style="height:400px;" src="@Model[i].Photos.FirstOrDefault()?.PublicURL??@altImage" alt="Image not available">
 
                         <div class="card-body">
                             <div class="text-center">
@@ -52,7 +55,7 @@
                                         <Label class="card-title fw-bold">:</Label>
                                     </div>
                                     <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden">@plotData.PlotTBL?.SocietyTBL.Name.ToUpper()</h5>
+                                        <h5 class="card-title overflow-hidden">@Model[i]._Plot?.SocietyTBL.Name.ToUpper()</h5>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -63,7 +66,7 @@
                                         <Label class="card-title fw-bold">:</Label>
                                     </div>
                                     <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden">@plotData.PlotTBL?.Block</h5>
+                                        <h5 class="card-title overflow-hidden">@Model[i]._Plot?.Block</h5>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -74,19 +77,16 @@
                                         <Label class="card-title fw-bold">:</Label>
                                     </div>
                                     <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden ">@plotData.PlotTBL?.Price<small style="font-size:10px;">Marla</small></h5>
+                                        <h5 class="card-title overflow-hidden ">@Model[i]._Plot?.Price<small style="font-size:10px;">Marla</small></h5>
                                     </div>
                                 </div>
 
                                 @* <textarea disabled class="card-text overflow-auto" style="min-height:200px; width:150px; max-height:300px; max-width:300px">@plotData.PlotTBL?.Description</textarea>*@
 
-
-                                <a asp-action="DetailSec" asp-route-id="@plotData.PlotTBL?.PlotId" class="btn btn-outline-primary pr-lg-5">Details</a>
-                                <a asp-action="Delete" asp-route-id="@plotData.PlotTBL?.PlotId" class="btn btn-outline-danger  pr-lg-5">Delete</a>
-
+                                <a asp-action="Detail" asp-route-id="@Model[i]._Plot.PlotId" class="btn btn-outline-primary pr-lg-5">Details</a>
                             </div>
                         </div>
-                        @if (plotData.PlotTBL.ApplicationUserTBL.Roles.Contains(SD.VerifiedUser))
+                        @if (Model[i].IsVerified)
                         {
                             <span class="card-badge badge badge-primary">Verified Agent</span>
                         }
@@ -126,12 +126,54 @@
     }
 
 </div>
+
 <nav aria-label="...">
     <ul class="pagination pagination-sm">
-        <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1">1</a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        @if (currentPage >= 3)
+        {
+            for (int i = currentPage - 2; i <= pageCount; i++)
+            {
+
+
+                if (i == currentPage)
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@currentPage" tabindex="-1">@i</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item"><a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@i">@i</a></li>
+                }
+                if (i > (currentPage + 2))
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 1; i <= pageCount; i++)
+            {
+
+
+                if (i == currentPage)
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@currentPage" tabindex="-1">@i</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item"><a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@i">@i</a></li>
+                }
+                if (i > (currentPage + 2))
+                {
+                    break;
+                }
+            }
+        }
+
     </ul>
 </nav>
+
