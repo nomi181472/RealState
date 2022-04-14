@@ -129,15 +129,25 @@ namespace realstate.Areas.AdminPanel.Controllers
             foreach (var item in plots)
             {
                 ListPlotsToAnyone listPlotsToAnyone = new ListPlotsToAnyone();
-                var photos = _unitOfWork.photoRepoAccess.GetAll(x => x.PlotId == item.PlotId);
-                
-                listPlotsToAnyone.Photos = photos.ToList();
-                listPlotsToAnyone._Plot = item;
-                listPlotsToAnyone._Plot.SocietyTBL= _unitOfWork.societyRepoAccess.GetFirstOrDefault(s => s.SocietyId == item.SocietyId);
-                listPlotsToAnyone.IsVerified = verifiedUsers.Exists(x => x.Id == item.UserId); ;
+                var user = _unitOfWork.applicationUserRepoAccess.GetFirstOrDefault(x => x.Id == item.UserId);
+                if (user != null)
+                {
+                    listPlotsToAnyone.Email = user.Email;
+                    listPlotsToAnyone.Phone = user.PhoneNumber;
+                    listPlotsToAnyone.Username = user.UserName;
+
+                    var photos = _unitOfWork.photoRepoAccess.GetAll(x => x.PlotId == item.PlotId);
+
+                    listPlotsToAnyone.Photos = photos.ToList();
+                    listPlotsToAnyone._Plot = item;
+                    listPlotsToAnyone._Plot.SocietyTBL = _unitOfWork.societyRepoAccess.GetFirstOrDefault(s => s.SocietyId == item.SocietyId);
+
+                    listPlotsToAnyone.IsVerified = verifiedUsers.Exists(x => x.Id == item.UserId); ;
 
 
-                listPlots.Add(listPlotsToAnyone);
+                    listPlots.Add(listPlotsToAnyone);
+                }
+               
                     
             }
             return View(listPlots);

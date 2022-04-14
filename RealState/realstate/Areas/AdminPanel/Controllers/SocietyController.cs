@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace realstate.Areas.AdminPanel.Controllers
 {
     [Area("AdminPanel")]
-    [Authorize(Roles = SD.AdminUser+","+SD.RegisteredUser+"," + SD.VerifiedUser)]
+    [Authorize(Roles = SD.AdminUser)] //Update(remove roles )
     public class SocietyController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

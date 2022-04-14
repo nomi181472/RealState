@@ -81,7 +81,7 @@
                                 @* <textarea disabled class="card-text overflow-auto" style="min-height:200px; width:150px; max-height:300px; max-width:300px">@plotData.PlotTBL?.Description</textarea>*@
 
 
-                                <a asp-action="DetailSec" asp-route-id="@plotData.PlotTBL?.PlotId" class="btn btn-outline-primary pr-lg-5">Details</a>
+                                <a asp-action="DetailSec" asp-route-id="@plotData.PlotTBL?.PlotId" class="btn btn-outline-info pr-lg-5">Details</a>
                                 <a asp-action="Delete" asp-route-id="@plotData.PlotTBL?.PlotId" class="btn btn-outline-danger  pr-lg-5">Delete</a>
 
                             </div>
@@ -126,12 +126,4 @@
     }
 
 </div>
-<nav aria-label="...">
-    <ul class="pagination pagination-sm">
-        <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1">1</a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-    </ul>
-</nav>
+ 

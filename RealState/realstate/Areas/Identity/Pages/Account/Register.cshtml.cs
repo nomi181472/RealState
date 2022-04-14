@@ -94,7 +94,7 @@ namespace realstate.Areas.Identity.Pages.Account
             {
                 ApplicationUser newEntity = new ApplicationUser()
                 {
-                    UserName = Input.Email,
+                    UserName = Input.UserName,
                     Email = Input.Email,
                     PhoneNumber = Input.PhoneNumber,
                     VerifiedUserId = Input.VerifiedUserId,

@@ -29,6 +29,11 @@
 @{
     await Html.RenderPartialAsync("BreadCrumbPartialView", new string[] { });
 }
+
+
+<div>
+    India's only real estate platform with 10,000+ highly rated sellers
+</div>
 <div class="container">
     @for (int i = 0; i < Model.Count;)
     {
@@ -38,8 +43,6 @@
 
             @for (int j = 0; j < 3 && i < Model.Count; j++)
             {
-
-
                 <div class="col-sm-12 col-md-4 h-100">
                     <div class="card @verifiedHighlight">
 
@@ -47,6 +50,7 @@
 
                         <div class="card-body">
                             <div class="text-center">
+                                <Label class="card-title fw-bold">@Model[i].Username</Label>
                                 <div class="row">
                                     <div class="col-sm-12 col-md-4 h-100">
                                         <Label class="card-title fw-bold">SocietyName</Label>
@@ -83,7 +87,18 @@
 
                                 @* <textarea disabled class="card-text overflow-auto" style="min-height:200px; width:150px; max-height:300px; max-width:300px">@plotData.PlotTBL?.Description</textarea>*@
 
-                                <a asp-action="Detail" asp-route-id="@Model[i]._Plot.PlotId" class="btn btn-outline-primary pr-lg-5">Details</a>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-4 h-100">
+                                        <a href="mailto:@Model[i].Email" class="btn btn-outline-primary pr-lg-5">Email</a>
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 h-100">
+                                        <a href="tel:@Model[i].Phone" class="btn btn-outline-primary pr-lg-5">SMS</a>
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 h-100">
+                                        <a href="tel:@Model[i].Phone" class="btn btn-primary pr-lg-5">Call</a>
+                                    </div>
+                                </div>
+                                <a asp-action="Detail" asp-route-id="@Model[i]._Plot.PlotId" class="btn btn-outline-info pr-lg-5">Details</a>
                             </div>
                         </div>
                         @if (Model[i].IsVerified)
@@ -176,4 +191,9 @@
 
     </ul>
 </nav>
+
+
+<div>
+    My Blogs here
+</div>
 
