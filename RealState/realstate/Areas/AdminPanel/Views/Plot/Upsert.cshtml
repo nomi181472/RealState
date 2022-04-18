@@ -83,6 +83,18 @@
             </div> @*SelectingSociety*@
             <div class="form-group row">
                 <div class="col-4">
+                    PostType
+                </div>
+                <div class="col-8">
+                    @Html.DropDownListFor(x => x.Type, Model.PostType, "Choose Post Type", new { @class = "form-control" })
+                    <span asp-validation-for="Type" class="text-danger"></span>
+
+
+
+                </div>
+            </div> @*SelectingSociety*@
+            <div class="form-group row">
+                <div class="col-4">
                     <label asp-for="ImagePaths">Add Plot Images</label>
                 </div>
                 <div class="col-8">

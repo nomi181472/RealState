@@ -10,7 +10,7 @@ namespace realstate.dataaccess.Repository.IRepository
    public interface IRepository<T> where T:class
     {
         T Get(int id);
-        Tuple<List<T>, decimal> GetAllWithPagination(int page, decimal pageResult);
+        Tuple<List<T>, decimal> GetAllWithPagination(Expression<Func<T, bool>> filter = null ,int page=1,  decimal pageResult=3);
         IEnumerable<T> GetAll(
             Expression<Func<T,bool>> filter=null,
             Func<IQueryable<T>,IOrderedQueryable<T>> orderby=null,

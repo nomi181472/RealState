@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using realstate.DTOs;
 using realstate.dataaccess.Data;
+using realstate.DTOs.PostDTO;
 
 namespace realstate.Areas.AdminPanel.Controllers
 {
@@ -110,21 +111,36 @@ namespace realstate.Areas.AdminPanel.Controllers
             return View(userIdPlotsDict);*/
         }
         [AllowAnonymous]
-        public async Task<IActionResult> PlotsWithPagination(int page=1)
+        [HttpGet]
+       
+        public async Task<IActionResult> PlotsWithPagination(string? category, string? search, int page = 1)
         {
+            List<ListPlotsToAnyone> listPlots = new List<ListPlotsToAnyone>();
             if (page == 0)
             {
                 return NoContent();
             }
+            Tuple<List<Plot>,decimal> tuple= null;
+            List<Plot> plots = new List<Plot>();
             //getall plots
-            var tuple= _unitOfWork.plotRepoAccess.GetAllWithPagination(page,pageResult:3);
-            var plots = tuple.Item1;
+            if (category != null && search!= null){
+                tuple = _unitOfWork.plotRepoAccess.GetAllWithPagination(x => x.Type == category && x.SocietyTBL.Name.ToLower()==search.ToLower(), page, pageResult: 3);
+            }
+            else if (category != null)
+            {
+                tuple = _unitOfWork.plotRepoAccess.GetAllWithPagination(x => x.Type == category, page, pageResult: 3);
+            }
+            if (tuple?.Item1?.Count > 0)
+            {
+                plots = tuple.Item1;
 
-            ViewBag.currentPage = page;
-            ViewBag.pageCount = tuple.Item2; ;
+                ViewBag.currentPage = page;
+                ViewBag.pageCount = tuple?.Item2; ;
+            }
+            
 
             //ViewBag.Count=
-            List<ListPlotsToAnyone> listPlots = new List<ListPlotsToAnyone>();
+            
             var verifiedUsers = _userManager.GetUsersInRoleAsync(SD.VerifiedUser).Result.ToList();
             foreach (var item in plots)
             {
@@ -220,6 +236,7 @@ namespace realstate.Areas.AdminPanel.Controllers
                     addPlotAndPhotos.Block = entity.Block;
                     addPlotAndPhotos.Description = entity.Description;
                     addPlotAndPhotos.Price = entity.Price;
+                    addPlotAndPhotos.Type = entity.Type;
                     addPlotAndPhotos.SocietyId = entity.SocietyId;
                     var allSocities = _unitOfWork.societyRepoAccess.GetFirstOrDefault(x => x.SocietyId == entity.SocietyId);
                     addPlotAndPhotos.SocietyName = allSocities.Name;
@@ -250,6 +267,7 @@ namespace realstate.Areas.AdminPanel.Controllers
                     addPlotAndPhotos.Block = entity.Block;
                     addPlotAndPhotos.Description = entity.Description;
                     addPlotAndPhotos.Price = entity.Price;
+                    addPlotAndPhotos.Type = entity.Type;
                     addPlotAndPhotos.SocietyId = entity.SocietyId;
                     var allSocities = _unitOfWork.societyRepoAccess.GetFirstOrDefault(x => x.SocietyId == entity.SocietyId);
                     addPlotAndPhotos.SocietyName = allSocities.Name;
@@ -286,6 +304,7 @@ namespace realstate.Areas.AdminPanel.Controllers
                     addPlotAndPhotos.Block = entity.Block;
                     addPlotAndPhotos.Description = entity.Description;
                     addPlotAndPhotos.Price = entity.Price;
+                    addPlotAndPhotos.Type = entity.Type;
                     addPlotAndPhotos.SocietyId = entity.SocietyId;
                     var allSocities = _unitOfWork.societyRepoAccess.GetFirstOrDefault(x => x.SocietyId == entity.SocietyId);
                     addPlotAndPhotos.SocietyName = allSocities.Name;
@@ -322,6 +341,7 @@ namespace realstate.Areas.AdminPanel.Controllers
                     addPlotAndPhotos.SocietyId = entity.SocietyId;
                     var allSocities = _unitOfWork.societyRepoAccess.GetFirstOrDefault(x=>x.SocietyId==entity.SocietyId);
                     addPlotAndPhotos.SocietyName= allSocities.Name;
+                    addPlotAndPhotos.Type = entity.Type;
                     //addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
 
                 }
@@ -330,7 +350,11 @@ namespace realstate.Areas.AdminPanel.Controllers
             {
 
                 var allSocities = _unitOfWork.societyRepoAccess.GetAll();
+                List<string> PostType = new List<string>();
+                PostType.Add("Buy");
+                PostType.Add("Sell");
                 addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
+                addPlotAndPhotos.PostType = PostType.Select(x => new SelectListItem() { Text = x, Value = x.ToString() }).ToList();
             }
 
 

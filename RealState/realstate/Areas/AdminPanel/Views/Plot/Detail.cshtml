@@ -93,7 +93,18 @@
                     <textarea disabled asp-for="Description" class="form-control"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
-            </div> @*Description*@
+            </div>
+            @*Type*@
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Type">Type</label>
+                </div>
+                <div class="col-8">
+                    <textarea disabled asp-for="Type" class="form-control"></textarea>
+                    <span asp-validation-for="Type" class="text-danger"></span>
+                </div>
+            </div>
+            @*Description*@
             <div class="form-group row">
                 <div class="col-4">
                     Available Societies
@@ -111,7 +122,7 @@
                             <a hidden asp-action="Update" asp-route-id="@Model.PlotId" name="id" class="btn btn-outline-primary form-control">Update</a>
                         </div>
                         <div class="col">
-                            <a asp-action="Plots" class="btn btn-outline-success form-control">Back</a>
+                            <a asp-action="PlotsWithPagination" class="btn btn-outline-success form-control">Back</a>
                         </div>
                     </div>
                 </div>

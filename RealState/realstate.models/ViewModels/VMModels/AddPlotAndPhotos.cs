@@ -28,9 +28,11 @@ namespace realstate.models.ViewModels.VMModels
         public List<string> PhotosUrl { get; set; }
 
         public string Description { get; set; }
+        [Required]
+        public string Type { get; set; }
 
-    
         public IEnumerable<SelectListItem> allSocieties { get; set; }
+        public IEnumerable<SelectListItem> PostType { get; set; }
     }
     public class PlotCompleteDetails
     {

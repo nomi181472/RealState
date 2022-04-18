@@ -53,11 +53,14 @@ namespace realstate.dataaccess.Repository
             }
             return query.ToList();
         }
-        public Tuple<List<T>,decimal> GetAllWithPagination(int page,decimal pageResult)
+        public Tuple<List<T>, decimal> GetAllWithPagination(Expression<Func<T, bool>> filter = null, int page=1, decimal pageResult=3)
         {
             IQueryable<T> query = dbset;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
 
-            
             int totalPost =query.Count();
             var pageCount = Math.Ceiling(totalPost / pageResult);
             var entities = query.Skip((page - 1) * (int)pageResult).Take((int)pageResult).ToList();

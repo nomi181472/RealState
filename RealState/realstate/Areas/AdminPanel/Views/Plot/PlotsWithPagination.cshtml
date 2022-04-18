@@ -5,9 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var altImage = "https://www.feednavigator.com/var/wrbm_gb_food_pharma/storage/images/9/2/8/5/235829-6-eng-GB/Feed-Test-SIC-Feed-20142.jpg";
     var verifiedHighlight = "border-primary";
-    int currentPage =Convert.ToInt32(ViewBag.currentPage);
+    int currentPage = Convert.ToInt32(ViewBag.currentPage);
     int pageCount = Convert.ToInt32(ViewBag.pageCount);
-  
+
 
 }
 
@@ -32,8 +32,44 @@
 
 
 <div>
-    India's only real estate platform with 10,000+ highly rated sellers
+    Pakistan's only real estate platform with 1000+ highly rated sellers
 </div>
+@using (Html.BeginForm("PlotsWithPagination", "Plot", FormMethod.Get))
+{
+<div class="container">
+    <form>
+        <div class="container">
+           
+
+            <label class="radio-inline p-lg-3">
+                <input type="radio" class="form-check-input" name="category" value="Buy" checked>Buy
+            </label>
+            <label class="radio-inline p-lg-3">
+                <input type="radio" name="category"  class="form-check-input" value="Sell">Sell
+            </label>
+            <label class="radio-inline p-lg-3">
+                <input type="radio" name="category"  class="form-check-input" value="DataAnalytics">Data Analytics
+            </label>
+
+        </div>
+        <div class="container"> 
+            <div class=" row">
+                <div class="col-lg-10 p-lg-2">
+                    <input type="search" value="" placeholder="enter society name" class="form-control" name="search" />
+                </div>
+                <div class="col-lg-2 p-lg-2">
+                    <input type="submit" class="form-control" value="search" />
+                </div>
+
+
+            </div>
+        </div>
+    </form>
+</div>
+    
+
+}
+
 <div class="container">
     @for (int i = 0; i < Model.Count;)
     {
@@ -81,10 +117,20 @@
                                         <Label class="card-title fw-bold">:</Label>
                                     </div>
                                     <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden ">@Model[i]._Plot?.Price<small style="font-size:10px;">Marla</small></h5>
+                                        <h5 class="card-title overflow-hidden ">@Model[i]._Plot?.Price</h5>
                                     </div>
                                 </div>
-
+                                <div class="row">
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">Type </Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">:</Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <h5 class="card-title overflow-hidden ">@Model[i]._Plot?.Type</h5>
+                                        </div>
+                                    </div>
                                 @* <textarea disabled class="card-text overflow-auto" style="min-height:200px; width:150px; max-height:300px; max-width:300px">@plotData.PlotTBL?.Description</textarea>*@
 
                                 <div class="row">
@@ -193,7 +239,5 @@
 </nav>
 
 
-<div>
-    My Blogs here
-</div>
+
 
