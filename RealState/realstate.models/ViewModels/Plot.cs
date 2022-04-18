@@ -21,6 +21,8 @@ namespace realstate.models.ViewModels
         public string Block { get; set; }
         [Required]
         public double Price { get; set; }
+        
+        public string Type { get; set; }
 
         public string Description { get; set; }
         [Required]
