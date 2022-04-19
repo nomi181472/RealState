@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    @RenderSection("head", required: false)
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - realstate</title>
@@ -30,8 +31,8 @@
                             <a class="nav-link text-dark" asp-area="AdminPanel" asp-controller="Plot" asp-action="PlotsWithPagination"><i class="fa-solid fa-house"></i></a>
                         </li>
                         @* <li class="nav-item">
-            <a class="nav-link" asp-area="AdminPanel" asp-controller="Location" asp-action="Index">List Location</a>
-        </li>*@
+                                <a class="nav-link" asp-area="AdminPanel" asp-controller="Location" asp-action="Index">List Location</a>
+                            </li>*@
                         @if (User.IsInRole(SD.VerifiedUser) || User.IsInRole(SD.AdminUser) || User.IsInRole(SD.RegisteredUser))
                         {
                             <li class="nav-item text-dark dropdown">
@@ -64,14 +65,14 @@
                                 </div>
                             </li>
                         }
-                        </ul>
+                    </ul>
                 </div>
             </div>
         </nav>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
-            
+
             @RenderBody()
         </main>
     </div>
@@ -89,6 +90,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://kit.fontawesome.com/7aef066700.js" crossorigin="anonymous"></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
