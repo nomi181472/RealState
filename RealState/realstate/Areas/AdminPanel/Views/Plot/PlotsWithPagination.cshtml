@@ -31,46 +31,46 @@
 }
 
 
-<div>
-    Pakistan's only real estate platform with 1000+ highly rated sellers
+<div class="font-weight-bold text-lg-center text-light">
+    <h3>Pakistan's only real estate platform with 1000+ highly rated sellers</h3>
 </div>
 @using (Html.BeginForm("PlotsWithPagination", "Plot", FormMethod.Get))
 {
-<div class="container">
-    <form>
-        <div class="container">
-           
+    <div class="container" style="margin-bottom:120px">
+        <form>
+            <div class="container font-weight-bold  text-light">
 
-            <label class="radio-inline p-lg-3">
-                <input type="radio" class="form-check-input" name="category" value="Buy" checked>Buy
-            </label>
-            <label class="radio-inline p-lg-3">
-                <input type="radio" name="category"  class="form-check-input" value="Sell">Sell
-            </label>
-            <label class="radio-inline p-lg-3">
-                <input type="radio" name="category"  class="form-check-input" value="DataAnalytics">Data Analytics
-            </label>
 
-        </div>
-        <div class="container"> 
-            <div class=" row">
-                <div class="col-lg-10 p-lg-2">
-                    <input type="search" value="" placeholder="enter society name" class="form-control" name="search" />
-                </div>
-                <div class="col-lg-2 p-lg-2">
-                    <input type="submit" class="form-control" value="search" />
-                </div>
-
+                <label class="radio-inline p-lg-3">
+                    <input type="radio" class="form-check-input" name="category" value="Buy" checked>Buy
+                </label>
+                <label class="radio-inline p-lg-3">
+                    <input type="radio" name="category" class="form-check-input" value="Sell">Sell
+                </label>
+                <label class="radio-inline p-lg-3">
+                    <input type="radio" name="category" class="form-check-input" value="DataAnalytics">Data Analytics
+                </label>
 
             </div>
-        </div>
-    </form>
-</div>
-    
+            <div class="container">
+                <div class=" row">
+                    <div class="col-lg-10 p-lg-2">
+                        <input type="search" value="" placeholder="enter society name" class="form-control" name="search" />
+                    </div>
+                    <div class="col-lg-2 p-lg-2">
+                        <input type="submit" class="form-control" value="search" />
+                    </div>
+
+
+                </div>
+            </div>
+        </form>
+    </div>
+
 
 }
 
-<div class="container">
+<div class="container" id="allPlots">
     @for (int i = 0; i < Model.Count;)
     {
 
@@ -121,16 +121,16 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                        <div class="col-sm-12 col-md-4 h-100">
-                                            <Label class="card-title fw-bold">Type </Label>
-                                        </div>
-                                        <div class="col-sm-12 col-md-4 h-100">
-                                            <Label class="card-title fw-bold">:</Label>
-                                        </div>
-                                        <div class="col-sm-12 col-md-4 h-100">
-                                            <h5 class="card-title overflow-hidden ">@Model[i]._Plot?.Type</h5>
-                                        </div>
+                                    <div class="col-sm-12 col-md-4 h-100">
+                                        <Label class="card-title fw-bold">Type </Label>
                                     </div>
+                                    <div class="col-sm-12 col-md-4 h-100">
+                                        <Label class="card-title fw-bold">:</Label>
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 h-100">
+                                        <h5 class="card-title overflow-hidden ">@Model[i]._Plot?.Type</h5>
+                                    </div>
+                                </div>
                                 @* <textarea disabled class="card-text overflow-auto" style="min-height:200px; width:150px; max-height:300px; max-width:300px">@plotData.PlotTBL?.Description</textarea>*@
 
                                 <div class="row">
@@ -182,62 +182,109 @@
 
 
 
-        <div class="divider py-4 bg-light"></div>
+
 
     }
 
 </div>
 
-<nav aria-label="...">
-    <ul class="pagination pagination-sm">
-        @if (currentPage >= 3)
-        {
-            for (int i = currentPage - 2; i <= pageCount; i++)
+@*<nav aria-label="...">
+        <ul class="pagination pagination-sm">
+            @if (currentPage >= 3)
             {
+                for (int i = currentPage - 2; i <= pageCount; i++)
+                {
 
 
-                if (i == currentPage)
-                {
-                    <li class="page-item disabled">
-                        <a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@currentPage" tabindex="-1">@i</a>
-                    </li>
-                }
-                else
-                {
-                    <li class="page-item"><a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@i">@i</a></li>
-                }
-                if (i > (currentPage + 2))
-                {
-                    break;
+                    if (i == currentPage)
+                    {
+                        <li class="page-item disabled">
+                            <a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@currentPage" tabindex="-1">@i</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item"><a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@i">@i</a></li>
+                    }
+                    if (i > (currentPage + 2))
+                    {
+                        break;
+                    }
                 }
             }
-        }
-        else
-        {
-            for (int i = 1; i <= pageCount; i++)
+            else
             {
+                for (int i = 1; i <= pageCount; i++)
+                {
 
 
-                if (i == currentPage)
-                {
-                    <li class="page-item disabled">
-                        <a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@currentPage" tabindex="-1">@i</a>
-                    </li>
-                }
-                else
-                {
-                    <li class="page-item"><a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@i">@i</a></li>
-                }
-                if (i > (currentPage + 2))
-                {
-                    break;
+                    if (i == currentPage)
+                    {
+                        <li class="page-item disabled">
+                            <a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@currentPage" tabindex="-1">@i</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item"><a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@i">@i</a></li>
+                    }
+                    if (i > (currentPage + 2))
+                    {
+                        break;
+                    }
                 }
             }
+
+        </ul>
+    </nav>
+*@
+
+<div id="chartContainer"></div>
+
+<script type="text/javascript">
+    window.onload = function () {
+        var chart = new CanvasJS.Chart("chartContainer", {
+            theme: "light2",
+            zoomEnabled: true,
+            animationEnabled: true,
+            title: {
+                text: "Line Chart in ASP.Net MVC using CanvasJS"
+            },
+            subtitles: [
+                {
+                    text: "Try Resizing the Browser"
+                }
+            ],
+            data: [
+                {
+                    type: "area",
+                    dataPoints: [
+                        { label: "jan", y: 71 },
+                        { label: "feb", y: 55 },
+                        { label: "march", y: 50 },
+                        { label: "april", y: 65 },
+                        { label: "june", y: 95 },
+                        { label: "july", y: 68 },
+                        { label: "august", y: 28 },
+                        { label: "sept", y: 34 },
+                        { label: "oct", y: 14 },
+                        { label: "nov", y: 33 },
+                        { label: "dec", y: 42 }
+                    ],
+                }
+            ]
+        });
+        chart.render();
+    };
+</script>
+@section head{
+    <style type="text/css">
+        body {
+            background-image: url('https://res.cloudinary.com/daers/image/upload/v1650293095/plotimage_cbhwbd.jpg');
+            margin: 0;
+            background-repeat: no-repeat;
+            background-size: 100% 400px;
         }
-
-    </ul>
-</nav>
-
-
-
+    </style>
+}
 
