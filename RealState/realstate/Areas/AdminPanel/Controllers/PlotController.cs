@@ -35,28 +35,6 @@ namespace realstate.Areas.AdminPanel.Controllers
             _configuration = configuration;
             _db = db;
         }
-        /*
-            * (from ep in dbContext.tbl_EntryPoint
-                join e in dbContext.tbl_Entry on ep.EID equals e.EID
-                join t in dbContext.tbl_Title on e.TID equals t.TID
-                where e.OwnerID == user.UID
-                select new {
-                    UID = e.OwnerID,
-                    TID = e.TID,
-                    Title = t.Title,
-                    EID = e.EID
-                })
-            */
-        /*var data=(from photo in _db.PhotoTBL
-        join plot in _db.PlotTBL on photo.PlotId equals plot.PlotId
-        join usermodel in _db.ApplicationUserTBL on plot.UserId equals usermodel.Id
-        where plot.UserId == userId
-        select new PlotCompleteDetails()
-        {
-            photo = photo,
-            user = usermodel,
-            plot=plot
-        });*/
         [AllowAnonymous]
         public async Task<IActionResult> Plots()
         {
@@ -112,7 +90,7 @@ namespace realstate.Areas.AdminPanel.Controllers
         }
         [AllowAnonymous]
         [HttpGet]
-       
+
         public async Task<IActionResult> PlotsWithPagination(string? category, string? search, int page = 1)
         {
             List<ListPlotsToAnyone> listPlots = new List<ListPlotsToAnyone>();
@@ -120,27 +98,30 @@ namespace realstate.Areas.AdminPanel.Controllers
             {
                 return NoContent();
             }
-            Tuple<List<Plot>,decimal> tuple= null;
+            Tuple<List<Plot>, decimal> tuple = null;
             List<Plot> plots = new List<Plot>();
             //getall plots
-            if (category != null && search!= null){
-                tuple = _unitOfWork.plotRepoAccess.GetAllWithPagination(x => x.Type == category && x.SocietyTBL.Name.ToLower()==search.ToLower(), page, pageResult: 3);
+            if (category != null && search != null)
+            {
+                tuple = _unitOfWork.plotRepoAccess.GetAllWithPagination(x => x.Type == category && x.SocietyTBL.Name.ToLower() == search.ToLower(), page, pageResult: 3);
             }
             else if (category != null)
             {
-                tuple = _unitOfWork.plotRepoAccess.GetAllWithPagination(x => x.Type == category, page, pageResult: 3);
+                tuple = _unitOfWork.plotRepoAccess.GetAllWithPagination(x => x.Type == category, page, pageResult: 10000);
             }
             if (tuple?.Item1?.Count > 0)
             {
                 plots = tuple.Item1;
 
                 ViewBag.currentPage = page;
-                ViewBag.pageCount = tuple?.Item2; ;
+                ViewBag.pageCount = tuple?.Item2;
+                ViewBag.category = category;//tuple?.Item2;
+                ViewBag.search = search;//tuple?.Item2;
             }
-            
+
 
             //ViewBag.Count=
-            
+
             var verifiedUsers = _userManager.GetUsersInRoleAsync(SD.VerifiedUser).Result.ToList();
             foreach (var item in plots)
             {
@@ -163,54 +144,41 @@ namespace realstate.Areas.AdminPanel.Controllers
 
                     listPlots.Add(listPlotsToAnyone);
                 }
-               
-                    
+
+
             }
             return View(listPlots);
 
-            //then get verifiedusers
-            //
-
-            /*var entities = _unitOfWork.photoRepoAccess.GetAll(includeProperties: "PlotTBL")
-                .Select(x => {
-                    x.PlotTBL.SocietyTBL = _unitOfWork.societyRepoAccess.GetFirstOrDefault(s => s.SocietyId == x.PlotTBL.SocietyId);
-                    return x;
-                });
-            var groupByUserId = entities.GroupBy(x => x.PlotTBL.UserId)
-                .ToDictionary(x => x.Key, x => x.ToList()
-                .GroupBy(i=>i.PlotId).ToDictionary(i=>i.Key,i=>i.ToList())
-                );
-           
-            Dictionary<string, ListPlotsToAnyone> userIdPlotsDict = new Dictionary<string, ListPlotsToAnyone>();
-            foreach (var userId in groupByUserId.Keys)
-            {
-                bool isVerified  = verifiedUsers.Exists(x => x.Id == userId);
-                foreach (var plotId in groupByUserId[userId].Keys)
-                {
-                    List<Photo> photos = groupByUserId[userId][plotId];
-                    Plot plot = photos.FirstOrDefault().PlotTBL;
-                    userIdPlotsDict.Add(userId, new ListPlotsToAnyone() { IsVerified = isVerified, Plot = plot, Photos = photos });
-                }
-                
-                
-            }
-            return View(userIdPlotsDict);*/
         }
         public async Task<IActionResult> Index()
         {
+           List< ListPlotsToAnyone> listPlots = new List<ListPlotsToAnyone>();
             var user = await _userManager.GetUserAsync(User);
             string userId = user.Id.ToString();
             var Roles = _userManager.GetRolesAsync(user).Result.ToList();
-            var entities = _unitOfWork.photoRepoAccess.GetAll(x => x.PlotTBL.UserId == userId, includeProperties: "PlotTBL")
+            var plots =_unitOfWork.plotRepoAccess.GetAll(x => x.UserId == userId).ToList();
+            foreach (var plot in plots)
+            {
+                ListPlotsToAnyone listPlotsToAnyone = new ListPlotsToAnyone();
+                listPlotsToAnyone._Plot = plot;
+                listPlotsToAnyone.Photos = _unitOfWork.photoRepoAccess.GetAll(x => x.PlotTBL.PlotId == plot.PlotId).ToList();
+                listPlotsToAnyone._Plot.SocietyTBL = _unitOfWork.societyRepoAccess.GetFirstOrDefault(s => s.SocietyId == plot.SocietyId);
+                listPlotsToAnyone.IsVerified = Roles.Exists(x => SD.VerifiedUser==x); ;
+
+                listPlots.Add(listPlotsToAnyone);
+            }
+
+            
+      /*      var entities = _unitOfWork.photoRepoAccess.GetAll(x => x.PlotTBL.UserId == userId)
                 .Select(x=> {
                     x.PlotTBL.ApplicationUserTBL = new ApplicationUser() { Roles = Roles };
                     x.PlotTBL.SocietyTBL = _unitOfWork.societyRepoAccess.GetFirstOrDefault(s => s.SocietyId == x.PlotTBL.SocietyId);
                     return x;
                     });
-
-            var groupByPlotId = entities.GroupBy(x => x.PlotId).ToDictionary(x=>x.Key,x=>x.ToList());
+*/
+           // var groupByPlotId = entities.GroupBy(x => x.PlotId).ToDictionary(x=>x.Key,x=>x.ToList());
            
-            return View(groupByPlotId);
+            return View(listPlots);
         }
         public IActionResult AddPlotAndPhotos()
         {
@@ -342,6 +310,7 @@ namespace realstate.Areas.AdminPanel.Controllers
                     var allSocities = _unitOfWork.societyRepoAccess.GetFirstOrDefault(x=>x.SocietyId==entity.SocietyId);
                     addPlotAndPhotos.SocietyName= allSocities.Name;
                     addPlotAndPhotos.Type = entity.Type;
+                    
                     //addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
 
                 }
@@ -417,6 +386,7 @@ namespace realstate.Areas.AdminPanel.Controllers
                 {
                    
                      temp = ModelConversion.ModelConversionUsingJSON<AddPlotAndPhotos, Plot>(entity);
+                    temp.UpdateOn = DateTime.UtcNow.ToString();
                     temp.UserId = userId;// _userManager.GetUserId(User); 
                     var plotId = _unitOfWork.plotRepoAccess.SetAndGet(temp).PlotId;
                     
@@ -427,6 +397,7 @@ namespace realstate.Areas.AdminPanel.Controllers
                     if (userId == entity.UserId )
                     {
                         temp = ModelConversion.ModelConversionUsingJSON<AddPlotAndPhotos, Plot>(entity);
+                        temp.UpdateOn = DateTime.UtcNow.ToString();
                         await _unitOfWork.plotRepoAccess.Update(temp); //already saving inside
                         
                     }

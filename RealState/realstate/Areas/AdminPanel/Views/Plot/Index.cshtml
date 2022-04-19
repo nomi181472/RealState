@@ -1,12 +1,13 @@
-﻿@model Dictionary<int, List<realstate.models.ViewModels.Photo>>
+﻿@model  List<realstate.models.ViewModels.VMModels.ListPlotsToAnyone>
 @using realstate.utility;
 @{
     ViewData["Title"] = "My Plots";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var altImage = "https://www.feednavigator.com/var/wrbm_gb_food_pharma/storage/images/9/2/8/5/235829-6-eng-GB/Feed-Test-SIC-Feed-20142.jpg";
-    var keys = Model.Keys.ToList();
+    var keys = Model.Count;
     var verifiedHighlight = "border-primary";
-    Photo plotData = null;
+    Plot plotData = null;
+    Photo photo = null;
 }
 @{
     await Html.RenderPartialAsync("BreadCrumbPartialView", new string[] { "MyPosts" });
@@ -27,20 +28,20 @@
         }
 </style>
 <div class="container">
-    @for (int i = 0; i < keys.Count;)
+    @for (int i = 0; i < keys;)
     {
 
 
         <div class="row bg-light p-3">
 
-            @for (int j = 0; j < 3 && i < keys.Count; j++)
+            @for (int j = 0; j < 3 && i < keys; j++)
             {
-                var plotId = keys[i];
-                plotData = Model[plotId].FirstOrDefault();
+                plotData = Model[i]._Plot;
+                photo = Model[i].Photos.FirstOrDefault();
                 <div class="col-sm-12 col-md-4 h-100">
                     <div class="card @verifiedHighlight">
 
-                        <img class="card-img-top img-thumbnail img-fluid" style="height:400px;" src="@plotData.PublicURL??@altImage" alt="Image not available">
+                        <img class="card-img-top img-thumbnail img-fluid" style="height:400px;" src="@photo?.PublicURL??@altImage" alt="Image not available">
 
                         <div class="card-body">
                             <div class="text-center">
@@ -52,7 +53,7 @@
                                         <Label class="card-title fw-bold">:</Label>
                                     </div>
                                     <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden">@plotData.PlotTBL?.SocietyTBL.Name.ToUpper()</h5>
+                                        <h5 class="card-title overflow-hidden">@plotData?.SocietyTBL.Name.ToUpper()</h5>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -63,7 +64,7 @@
                                         <Label class="card-title fw-bold">:</Label>
                                     </div>
                                     <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden">@plotData.PlotTBL?.Block</h5>
+                                        <h5 class="card-title overflow-hidden">@plotData?.Block</h5>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -74,7 +75,7 @@
                                         <Label class="card-title fw-bold">:</Label>
                                     </div>
                                     <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden ">@plotData.PlotTBL?.Price</h5>
+                                        <h5 class="card-title overflow-hidden ">@plotData?.Price</h5>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -85,19 +86,19 @@
                                         <Label class="card-title fw-bold">:</Label>
                                     </div>
                                     <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden ">@plotData.PlotTBL?.Type</h5>
+                                        <h5 class="card-title overflow-hidden ">@plotData?.Type</h5>
                                     </div>
                                 </div>
 
                                 @* <textarea disabled class="card-text overflow-auto" style="min-height:200px; width:150px; max-height:300px; max-width:300px">@plotData.PlotTBL?.Description</textarea>*@
 
 
-                                <a asp-action="DetailSec" asp-route-id="@plotData.PlotTBL?.PlotId" class="btn btn-outline-info pr-lg-5">Details</a>
-                                <a asp-action="Delete" asp-route-id="@plotData.PlotTBL?.PlotId" class="btn btn-outline-danger  pr-lg-5">Delete</a>
+                                <a asp-action="DetailSec" asp-route-id="@plotData?.PlotId" class="btn btn-outline-info pr-lg-5">Details</a>
+                                <a asp-action="Delete" asp-route-id="@plotData?.PlotId" class="btn btn-outline-danger  pr-lg-5">Delete</a>
 
                             </div>
                         </div>
-                        @if (plotData.PlotTBL.ApplicationUserTBL.Roles.Contains(SD.VerifiedUser))
+                        @if (Model[i].IsVerified)
                         {
                             <span class="card-badge badge badge-primary">Verified Agent</span>
                         }
@@ -137,4 +138,3 @@
     }
 
 </div>
- 
