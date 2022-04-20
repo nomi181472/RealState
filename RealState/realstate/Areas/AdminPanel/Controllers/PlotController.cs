@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using realstate.DTOs;
 using realstate.dataaccess.Data;
 using realstate.DTOs.PostDTO;
+using Newtonsoft.Json;
 
 namespace realstate.Areas.AdminPanel.Controllers
 {
@@ -157,17 +158,66 @@ namespace realstate.Areas.AdminPanel.Controllers
             }
             return View(userIdPlotsDict);*/
         }
+        private async Task<List<List<AreaGraph>>> FindAverageOfAllPost(string society)
+        {
+            var plots=_unitOfWork.plotRepoAccess.GetAll(x => x.SocietyTBL.Name.ToLower() == society.ToLower());
+            if (!(plots.Count() > 0))
+                return new List<List<AreaGraph>>() ;
+            var plotsGroupByBlock=plots.GroupBy(x => x.Block).ToDictionary(x=>x.Key,x=>x.ToList());
+            List<List<AreaGraph>> allData = new List<List<AreaGraph>>();
+            foreach (var item in plotsGroupByBlock.Keys)
+            { 
+                if(item.ToUpper() == "A" || item.ToUpper() == "B"|| item.ToUpper() == "C")
+                {
+                    var allplots = plotsGroupByBlock[item].GroupBy(x => DateTime.Parse(x.UpdateOn).ToString("MMMM"))
+                                        .ToDictionary(x => x.Key, x => x.ToList())
+                                        .Select(x => new AreaGraph(x.Key, Math.Round(x.Value.Sum(x => x.Price) / x.Value.Count,2)) { }).ToList();
+                    allData.Add(allplots);
+                }
+                
+                 
+            }
+            return allData;
+        }
+        public async Task<bool> GenerateGraphData(string society)
+        {
+            var allData =await  FindAverageOfAllPost(society);
+
+            ViewBag.result = true;
+         
+           
+            if(allData.Count>=1)
+                 ViewBag.DataPoints1 = JsonConvert.SerializeObject(allData[0]);
+
+            if (allData.Count >= 2)
+                ViewBag.DataPoints2 = JsonConvert.SerializeObject(allData[1]);
+
+            if (allData.Count >=3)
+                ViewBag.DataPoints3 = JsonConvert.SerializeObject(allData[2]);
+            
+
+            return true;
+        }
         [AllowAnonymous]
         [HttpGet]
 
         public async Task<IActionResult> PlotsWithPagination(string? category, string? search, int page = 1)
         {
             List<ListPlotsToAnyone> listPlots = new List<ListPlotsToAnyone>();
-            if (page == 0)
+            /*if (page == 0)
             {
                 return NoContent();
-            }
+            }*/
+            
             Tuple<List<Plot>, decimal> tuple = null;
+            if (category == "DataAnalytics")
+            {
+                if(search==null)
+                    return View(new List<ListPlotsToAnyone>());
+                await GenerateGraphData(search);
+                return View(new List<ListPlotsToAnyone>());
+
+            }
             List<Plot> plots = new List<Plot>();
             //getall plots
             if (category != null && search != null)

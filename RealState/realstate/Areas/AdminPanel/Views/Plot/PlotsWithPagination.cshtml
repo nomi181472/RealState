@@ -42,7 +42,7 @@
 
 
                 <label class="radio-inline p-lg-3">
-                    <input type="radio" class="form-check-input" name="category" value="Buy" checked>Buy
+                    <input type="radio" class="form-check-input" name="category" value="Buy">Buy
                 </label>
                 <label class="radio-inline p-lg-3">
                     <input type="radio" name="category" class="form-check-input" value="Sell">Sell
@@ -241,41 +241,61 @@
 
 <div id="chartContainer"></div>
 
-<script type="text/javascript">
-    window.onload = function () {
-        var chart = new CanvasJS.Chart("chartContainer", {
-            theme: "light2",
-            zoomEnabled: true,
-            animationEnabled: true,
-            title: {
-                text: "Line Chart in ASP.Net MVC using CanvasJS"
-            },
-            subtitles: [
-                {
-                    text: "Try Resizing the Browser"
-                }
-            ],
-            data: [
-                {
-                    type: "area",
-                    dataPoints: [
-                        { label: "jan", y: 71 },
-                        { label: "feb", y: 55 },
-                        { label: "march", y: 50 },
-                        { label: "april", y: 65 },
-                        { label: "june", y: 95 },
-                        { label: "july", y: 68 },
-                        { label: "august", y: 28 },
-                        { label: "sept", y: 34 },
-                        { label: "oct", y: 14 },
-                        { label: "nov", y: 33 },
-                        { label: "dec", y: 42 }
-                    ],
-                }
-            ]
-        });
-        chart.render();
-    };
+
+
+<script>
+
+window.onload = function () {
+
+var chart = new CanvasJS.Chart("chartContainer", {
+	theme: "light2",
+	title: {
+		text: "Comparison Of 3 Block Rates"
+	},
+	subtitles: [{
+		text: "PKR"
+	}],
+	axisY: {
+		prefix: "PKR"
+	},
+	toolTip: {
+		shared: true
+	},
+	data: [{
+		type: "area",
+		name: "A",
+		markerSize: 0,
+		xValueType: "dateTime",
+		xValueFormatString: "MMM YYYY",
+		yValueFormatString: "pkr #,##0.##",
+		dataPoints: @Html.Raw(ViewBag.DataPoints2)
+	},
+	{
+		type: "area",
+		name: "B",
+		markerSize: 0,
+		xValueType: "dateTime",
+		xValueFormatString: "MMM YYYY",
+        yValueFormatString: "pkr #,##0.##",
+		dataPoints: @Html.Raw(ViewBag.DataPoints1)
+	},
+    {
+		type: "area",
+		name: "C",
+		markerSize: 0,
+		xValueType: "dateTime",
+		xValueFormatString: "MMM YYYY",
+        yValueFormatString: "pkr #,##0.##",
+		dataPoints: @Html.Raw(ViewBag.DataPoints3)
+	}
+	]
+});
+chart.render();
+
+}
+</script>
+
+
 </script>
 @section head{
     <style type="text/css">
