@@ -18,5 +18,8 @@ namespace realstate.models.ViewModels
         public int LocationId { get; set; }
         [ForeignKey(nameof(LocationId))]
         public Location LocationTBL { get; set; }
+        [Required]
+        public string map { get; set; }
+        
     }
 }
