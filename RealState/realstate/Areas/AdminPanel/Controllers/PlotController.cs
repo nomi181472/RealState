@@ -28,12 +28,81 @@ namespace realstate.Areas.AdminPanel.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _db;
+        Random random { get; set; }
         public PlotController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager,IConfiguration configuration,ApplicationDbContext db)
         {
             _unitOfWork = unitOfWork;
             _userManager= userManager;
             _configuration = configuration;
             _db = db;
+             random = new Random();
+        }
+        private string getRandomImages()
+        {
+            string[] imagesUrl = {
+                "https://res.cloudinary.com/daers/image/upload/v1650460047/amknvqjn3dlrjvulxnp7.jpg",
+                "https://res.cloudinary.com/daers/image/upload/v1650460011/v4r2382off4t3qi7elmy.jpg",
+                "https://res.cloudinary.com/daers/image/upload/v1650459766/cwo0hv7f5c1kwu8ua5nh.jpg",
+                "https://res.cloudinary.com/daers/image/upload/v1650459737/ywu5vdyudhfwuw24fdgu.webp",
+                "https://res.cloudinary.com/daers/image/upload/v1650459690/juootd12vp4j6jlaiynq.jpg",
+                "https://res.cloudinary.com/daers/image/upload/v1650294050/nzgq31oe9kgrogejjez2.jpg",
+                "https://res.cloudinary.com/daers/image/upload/v1650293983/ogh3lzueciaty4nfsugp.jpg",
+                "https://res.cloudinary.com/daers/image/upload/v1650288943/ctqwbtky7bqlcwvnjcfs.webp",
+                "https://res.cloudinary.com/daers/image/upload/v1649800383/jcmzr9xvzz3ikrf0gash.jpg",
+                "https://res.cloudinary.com/daers/image/upload/v1649784552/hwuchxf5ys82xto9dhmf.webp",
+
+            };
+           
+            return imagesUrl[random.Next(0, imagesUrl.Length)];
+
+        }
+        private async Task<bool> AddDummyData(string userId)
+        {
+            string[] blocks=  { "A", "B", "C" };
+            string[] types = { "Buy", "Sell" };
+            Dictionary<string, double> blockDict = new Dictionary<string, double>();
+            blockDict.Add("A", 10);
+            blockDict.Add("B", 5);
+            blockDict.Add("C", 20);
+
+
+            var society = _unitOfWork.societyRepoAccess.GetFirstOrDefault(x => x.Name.ToLower() == "topcity");
+            DateTime dateTime = new DateTime(2021,1,10) ;
+            DateTime pres = dateTime;// new DateTime();
+           // List<List<Plot>> allPlots = new List<List<Plot>>();
+            for (int i = 1; i <= 12; i++)
+            {
+               // List<Plot> p = new List<Plot>();
+                for(int j = 0; j < 20; j++)
+                {
+                    int blockIndex = random.Next(0, blocks.Length );
+                    Plot plot = new Plot();
+                    plot.UserId = userId;
+                    plot.Block = blocks[blockIndex];
+                    plot.PlotSize= blockDict[blocks[blockIndex]];
+                    plot.Price = random.Next((int)(1000 * plot.PlotSize), (int)(10000 * plot.PlotSize));
+                    plot.Type= types[random.Next(0, types.Length )];
+                    plot.UpdateOn = pres.ToString();
+                    plot.SocietyId = society.SocietyId;
+                    plot.CompleteAddress = "CompleteAddressCompleteAddressCompleteAddress";
+                    plot.Description = "DescriptionDescriptionDescriptionDescriptionDescription";
+                    // p.Add(plot);
+                     _unitOfWork.plotRepoAccess.Add(plot);
+                    await _unitOfWork.Save();
+
+                    var image = getRandomImages();
+                    Photo photo = new Photo();
+                    photo.IsActive = true;
+                    photo.PlotId = plot.PlotId;
+                    photo.PublicURL = image;
+                    _unitOfWork.photoRepoAccess.Add(photo);
+                   await  _unitOfWork.Save();
+                   
+                }
+                pres=dateTime.AddMonths(i);
+               // allPlots.Add(p);
+            }
+            return true;
         }
         [AllowAnonymous]
         public async Task<IActionResult> Plots()
@@ -228,6 +297,7 @@ namespace realstate.Areas.AdminPanel.Controllers
             {
 
                 entity = _unitOfWork.plotRepoAccess.Get(id.GetValueOrDefault());
+                var user = _unitOfWork.applicationUserRepoAccess.GetAll(x=>x.Id==entity.UserId).FirstOrDefault();
                 if (entity != null)
                 {
                     addPlotAndPhotos.PlotSize = entity.PlotSize;
@@ -239,7 +309,9 @@ namespace realstate.Areas.AdminPanel.Controllers
                     addPlotAndPhotos.SocietyId = entity.SocietyId;
                     var allSocities = _unitOfWork.societyRepoAccess.GetFirstOrDefault(x => x.SocietyId == entity.SocietyId);
                     addPlotAndPhotos.SocietyName = allSocities.Name;
-
+                    addPlotAndPhotos.Email = user.Email;
+                    addPlotAndPhotos.Username = user.UserName;
+                    addPlotAndPhotos.Phone = user.PhoneNumber;
                     addPlotAndPhotos.PhotosUrl = _unitOfWork.photoRepoAccess.GetAll(x => x.PlotId == id.GetValueOrDefault()).Select(x => x.PublicURL).ToList();
                     //addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
                 }
@@ -265,6 +337,7 @@ namespace realstate.Areas.AdminPanel.Controllers
             {
 
                 entity = _unitOfWork.plotRepoAccess.Get(id.GetValueOrDefault());
+                var user = _unitOfWork.applicationUserRepoAccess.GetAll(x => x.Id == entity.UserId).FirstOrDefault();
                 if (entity != null)
                 {
                     addPlotAndPhotos.PlotSize = entity.PlotSize;
@@ -276,7 +349,9 @@ namespace realstate.Areas.AdminPanel.Controllers
                     addPlotAndPhotos.SocietyId = entity.SocietyId;
                     var allSocities = _unitOfWork.societyRepoAccess.GetFirstOrDefault(x => x.SocietyId == entity.SocietyId);
                     addPlotAndPhotos.SocietyName = allSocities.Name;
-                    
+                    addPlotAndPhotos.Email = user.Email;
+                    addPlotAndPhotos.Username = user.UserName;
+                    addPlotAndPhotos.Phone = user.PhoneNumber;
                     addPlotAndPhotos.PhotosUrl = _unitOfWork.photoRepoAccess.GetAll(x => x.PlotId == id.GetValueOrDefault()).Select(x => x.PublicURL).ToList();
                     //addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
                 }
@@ -376,9 +451,16 @@ namespace realstate.Areas.AdminPanel.Controllers
         public async Task<IActionResult> Upsert(AddPlotAndPhotos entity, List<IFormFile> postedFiles)
         {
 
-            string userId = _userManager.GetUserId(User);
-            Plot temp = null;
+
             string redirect = nameof(Index);
+
+            
+
+            string userId = _userManager.GetUserId(User);
+            /*await this.AddDummyData(userId); // will be commented
+            return RedirectToAction(redirect);*/
+            Plot temp = null;
+            
             if (ModelState.IsValid)
             {
 
