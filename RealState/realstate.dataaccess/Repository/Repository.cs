@@ -32,7 +32,7 @@ namespace realstate.dataaccess.Repository
         {
             return dbset.Find(id);
         }
-
+        
         public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderby = null, string includeProperties = null)
         {
             IQueryable<T> query = dbset;
