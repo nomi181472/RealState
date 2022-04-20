@@ -11,5 +11,10 @@ namespace realstate.models.ViewModels.VMModels
     {
         public Society society { get; set; }
         public IEnumerable<SelectListItem> allLocations { get; set; }
+        public SocietyVM()
+        {
+            society = new Society();
+            allLocations = new List<SelectListItem>();
+        }
     }
 }
