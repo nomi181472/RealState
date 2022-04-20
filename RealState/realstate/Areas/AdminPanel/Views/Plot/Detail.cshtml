@@ -6,7 +6,7 @@
     var altImage = "//www.feednavigator.com/var/wrbm_gb_food_pharma/storage/images/9/2/8/5/235829-6-eng-GB/Feed-Test-SIC-Feed-20142.jpg";
 }
 @{
-    await Html.RenderPartialAsync("BreadCrumbPartialView", new string[] { "MyPosts", "Detail",Model?.Block });
+    await Html.RenderPartialAsync("BreadCrumbPartialView", new string[] { "AllPosts", "Detail",Model?.Block });
 }
 <form method="post" enctype="multipart/form-data">
     <div class="row p-3 border">
@@ -49,6 +49,33 @@
 
         <div class="col-8 text-center pt-4">
 
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Username">Username</label>
+                </div>
+                <div class="col-8">
+                    <input disabled asp-for="Username" class="form-control" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+            </div> @*Username*@
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Email">Email</label>
+                </div>
+                <div class="col-8">
+                    <input disabled asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div> @*email*@
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Phone">Phone</label>
+                </div>
+                <div class="col-8">
+                    <input disabled asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+            </div> @*Phone*@
             <div class="form-group row">
                 <div class="col-4">
                     <label asp-for="Block">Block</label>

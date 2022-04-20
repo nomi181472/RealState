@@ -5,7 +5,7 @@
     var title = "Add society";
 }
 
-<form method="post">
+<form method="post"  enctype="multipart/form-data">
     <div class="row p-3 border">
          <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         @if (Model.society.SocietyId != 0)
@@ -18,30 +18,39 @@
     <div class="col-12 border-bottom">
         <h2 class="text-primary">@title</h2>
     </div>
-        <div class="col-8 pt-4">
-            <div class="form-group row">
-                <div class="col-4">
-                    <label asp-for="society.Name"></label>
-                </div>
-                <div class="col-8">
-                   <input asp-for="society.Name" class="form-control"/>
-                    <span asp-validation-for="society.Name" class="text-danger"></span>
-                </div>
-         </div>
-            <div class="form-group row">
-                <div class="col-4">
-                   Available Locations
-                </div>
-                <div class="col-8">
-                    @Html.DropDownListFor(x => x.society.LocationId, Model.allLocations, "--Available Location--", new { @class = "form-control" })
-                    <span asp-validation-for="society.LocationId" class="text-danger"></span>
-                </div>
-            </div> 
-          
-            <div class="form-group row">
-                <div class="col-8 offset-4">
-                    @if (Model.society.SocietyId != 0)
-                    {
+    <div class="col-8 pt-4">
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="society.Name"></label>
+            </div>
+            <div class="col-8">
+                <input asp-for="society.Name" class="form-control" />
+                <span asp-validation-for="society.Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-4">
+                Available Locations
+            </div>
+            <div class="col-8">
+                 @Html.DropDownListFor(x => x.society.LocationId, Model.allLocations?? new List<SelectListItem>(), "--Available Location--", new { @class = "form-control" })
+                <span asp-validation-for="society.LocationId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="society.Map">Add Map Image</label>
+            </div>
+            <div class="col-8">
+
+                <input asp-for="society.Map" value="empty"type="file" multiple name="postedFiles" class="form-control" />
+                
+            </div>
+        </div> @*SelectImages*@
+        <div class="form-group row">
+            <div class="col-8 offset-4">
+                @if (Model.society.SocietyId != 0)
+                {
                     <div class="row">
                         <div class="col">
                             <button type="submit" class="btn btn-primary form-control" asp-route-locationId="@Model.society.SocietyId">Update</button>
@@ -51,22 +60,22 @@
                         </div>
 
                     </div>
-                    }
-                    else
-                    {
-                <div class="row">
-                    <div class="col">
-                        <button type="submit" class="btn btn-primary form-control">Add society</button>
-                    </div>
-                    <div class="col">
-                        <a asp-action="Index" class="btn btn-success form-control">Back</a>
-                    </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" class="btn btn-primary form-control">Add society</button>
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-success form-control">Back</a>
+                        </div>
 
-                </div>
-                    }
-                </div>
+                    </div>
+                }
             </div>
         </div>
+    </div>
     </div>
 </form>
 @section Scripts{ 
