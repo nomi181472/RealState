@@ -42,6 +42,35 @@ namespace realstate.Areas.AdminPanel.Controllers
             }
             return View(entity);
         }
+        [AllowAnonymous]
+        [HttpGet]
+        
+        public async Task<IActionResult> GetVerifiedUsers(string? category, string? search)
+        {
+            if (category != "VerifiedUsers")
+            {
+                return RedirectToAction("PlotsWithPagination", "Plot", new { category = category, search = search });
+            }
+            var users = await _userManager.GetUsersInRoleAsync(SD.VerifiedUser);
+            if ( users.Count > 0)
+            {
+                if (search != null)
+                {
+                    return View(users.Where(x=>x.UserName.ToLower()==search.ToLower()).Select(x => new VerifiedUsersDTO() { Email = x.Email, PhoneNumber = x.PhoneNumber, IsVerified = true, UserName = x.UserName }).ToList());
+
+
+                }
+                else
+                {
+                    return View(users.Select(x => new VerifiedUsersDTO() { Email = x.Email, PhoneNumber = x.PhoneNumber, IsVerified = true, UserName = x.UserName }).ToList());
+                }
+            }
+
+           
+            
+            return View( new List<VerifiedUsersDTO>());
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert(VerifiedUser entity)

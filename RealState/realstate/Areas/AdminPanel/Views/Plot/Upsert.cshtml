@@ -21,7 +21,7 @@
                     <label asp-for="Block">Block</label>
                 </div>
                 <div class="col-8">
-                    <input asp-for="Block" class="form-control" />
+                    @Html.DropDownListFor(x => x.Block, Model.BlockTypes, "--Available Block--", new { @class = "form-control" })
                     <span asp-validation-for="Block" class="text-danger"></span>
                 </div>
             </div> @*Block*@

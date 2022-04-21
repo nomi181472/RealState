@@ -37,6 +37,7 @@ namespace realstate.models.ViewModels.VMModels
 
         public IEnumerable<SelectListItem> allSocieties { get; set; }
         public IEnumerable<SelectListItem> PostType { get; set; }
+        public IEnumerable<SelectListItem> BlockTypes { get; set; }
     }
     public class PlotCompleteDetails
     {

@@ -198,6 +198,7 @@ namespace realstate.Areas.AdminPanel.Controllers
 
             return true;
         }
+
         [AllowAnonymous]
         [HttpGet]
 
@@ -218,11 +219,15 @@ namespace realstate.Areas.AdminPanel.Controllers
                 return View(new List<ListPlotsToAnyone>());
 
             }
+            else if(category== "VerifiedUsers")
+            {
+                return RedirectToAction("GetVerifiedUsers", "VerifiedUser", new { category = category, search= search });
+            }
             List<Plot> plots = new List<Plot>();
             //getall plots
             if (category != null && search != null)
             {
-                tuple = _unitOfWork.plotRepoAccess.GetAllWithPagination(x => x.Type == category && x.SocietyTBL.Name.ToLower() == search.ToLower(), page, pageResult: 3);
+                tuple = _unitOfWork.plotRepoAccess.GetAllWithPagination(x => x.Type == category && x.SocietyTBL.Name.ToLower() == search.ToLower(), page, pageResult:100000);
             }
             else if (category != null)
             {
@@ -325,10 +330,12 @@ namespace realstate.Areas.AdminPanel.Controllers
                     addPlotAndPhotos.Price = entity.Price;
                     addPlotAndPhotos.Type = entity.Type;
                     addPlotAndPhotos.SocietyId = entity.SocietyId;
-                    var allSocities = _unitOfWork.societyRepoAccess.GetFirstOrDefault(x => x.SocietyId == entity.SocietyId);
-                    addPlotAndPhotos.SocietyName = allSocities.Name;
+                    var currentPlotSociety = _unitOfWork.societyRepoAccess.GetFirstOrDefault(x => x.SocietyId == entity.SocietyId);
+                    addPlotAndPhotos.SocietyName = currentPlotSociety.Name;
                     addPlotAndPhotos.UserId = entity.UserId;
                     addPlotAndPhotos.PhotosUrl = _unitOfWork.photoRepoAccess.GetAll(x => x.PlotId == id.GetValueOrDefault()).Select(x => x.PublicURL).ToList();
+                    AddDropDownList(ref addPlotAndPhotos);
+                   // var allSocities = _unitOfWork.societyRepoAccess.GetAll();
                     //addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
                 }
             }
@@ -443,18 +450,28 @@ namespace realstate.Areas.AdminPanel.Controllers
             else
             {
 
-                var allSocities = _unitOfWork.societyRepoAccess.GetAll();
-                List<string> PostType = new List<string>();
-                PostType.Add("Buy");
-                PostType.Add("Sell");
-                addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
-                addPlotAndPhotos.PostType = PostType.Select(x => new SelectListItem() { Text = x, Value = x.ToString() }).ToList();
+                AddDropDownList(ref addPlotAndPhotos);
             }
 
 
             
 
             return View(addPlotAndPhotos);
+        }
+
+        private  void AddDropDownList(ref AddPlotAndPhotos addPlotAndPhotos)
+        {
+            var allSocities = _unitOfWork.societyRepoAccess.GetAll();
+            List<string> PostType = new List<string>();
+            PostType.Add("Buy");
+            PostType.Add("Sell");
+            List<string> BlockType = new List<string>();
+            BlockType.Add("A");
+            BlockType.Add("B");
+            BlockType.Add("C");
+            addPlotAndPhotos.BlockTypes = BlockType.Select(x => new SelectListItem() { Text = x, Value = x.ToString() }).ToList();
+            addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
+            addPlotAndPhotos.PostType = PostType.Select(x => new SelectListItem() { Text = x, Value = x.ToString() }).ToList();
         }
         private List<string> CopyImages(List<IFormFile> postedFiles,string userId)
         {

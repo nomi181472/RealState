@@ -14,7 +14,7 @@ namespace realstate.Areas.AdminPanel.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("PlotsWithPagination","Plot");
         }
     }
 }

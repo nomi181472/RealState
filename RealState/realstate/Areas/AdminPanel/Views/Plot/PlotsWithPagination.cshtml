@@ -48,8 +48,12 @@
                     <input type="radio" name="category" class="form-check-input" value="Sell">Sell
                 </label>
                 <label class="radio-inline p-lg-3">
+                    <input type="radio" name="category" class="form-check-input" value="VerifiedUsers">Verified Users
+                </label>
+                <label class="radio-inline p-lg-3">
                     <input type="radio" name="category" class="form-check-input" value="DataAnalytics">Data Analytics
                 </label>
+
 
             </div>
             <div class="container">
@@ -74,170 +78,124 @@
     @for (int i = 0; i < Model.Count;)
     {
 
+        <section class="mx-auto my-5" style="max-width: 80rem;">
+            <div class="row bg-light p-3">
 
-        <div class="row bg-light p-3">
+                @for (int j = 0; j < 2 && i < Model.Count; j++)
+                {
+                    <div class="col-sm-12 col-md-6 h-100">
+                        <div class="card @verifiedHighlight">
+                            <div class="card-body d-flex flex-row">
+                                <img src="https://www.w3schools.com/w3images/avatar6.png" class="rounded-circle me-3" height="50px"
+                                     width="50px" alt="avatar" />
+                                <div>
+                                    <h5 class="card-title font-weight-bold mb-2">@Model[i].Username</h5>
+                                    <p class="card-text"><i class="far fa-clock pe-2"></i>@Model[i]._Plot.UpdateOn</p>
+                                </div>
 
-            @for (int j = 0; j < 3 && i < Model.Count; j++)
-            {
-                <div class="col-sm-12 col-md-4 h-100">
-                    <div class="card @verifiedHighlight">
-
-                        <img class="card-img-top img-thumbnail img-fluid" style="height:400px;" src="@Model[i].Photos.FirstOrDefault()?.PublicURL??@altImage" alt="Image not available">
-
-                        <div class="card-body">
-                            <div class="text-center">
-                                <Label class="card-title fw-bold">@Model[i].Username</Label>
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">SocietyName</Label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">:</Label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden">@Model[i]._Plot?.SocietyTBL.Name.ToUpper()</h5>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">Block </Label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">:</Label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden">@Model[i]._Plot?.Block</h5>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">Price </Label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">:</Label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden ">@Model[i]._Plot?.Price</h5>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">Type </Label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">:</Label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden ">@Model[i]._Plot?.Type</h5>
-                                    </div>
-                                </div>
-                                @* <textarea disabled class="card-text overflow-auto" style="min-height:200px; width:150px; max-height:300px; max-width:300px">@plotData.PlotTBL?.Description</textarea>*@
-
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <a href="mailto:@Model[i].Email" class="btn btn-outline-primary pr-lg-5">Email</a>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <a href="tel:@Model[i].Phone" class="btn btn-outline-primary pr-lg-5">SMS</a>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <a href="tel:@Model[i].Phone" class="btn btn-primary pr-lg-5">Call</a>
-                                    </div>
-                                </div>
-                                <a asp-action="Detail" asp-route-id="@Model[i]._Plot.PlotId" class="btn btn-outline-info pr-lg-5">Details</a>
                             </div>
+                            <div class="card-body d-flex flex-row">
+
+                                <div style="padding:10px">
+
+                                    <p class="card-text"><i class="fa fa-envelope"></i>&nbsp @Model[i].Email</p>
+                                </div>
+                                <div style="padding:10px">
+
+                                    <p class="card-text"><i class="fa fa-phone"></i>&nbsp @Model[i].Phone</p>
+                                </div>
+                            </div>
+                            <img class="card-img-top img-thumbnail img-fluid" style="height:400px;" src="@Model[i].Photos.FirstOrDefault()?.PublicURL??@altImage" alt="Image not available">
+
+                            <div class="card-body">
+                               
+                                <div class="text-center">
+                                    
+                                    <!--<div class="row">
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">SocietyName</Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">:</Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <h5 class="card-title overflow-hidden">@Model[i]._Plot?.SocietyTBL.Name.ToUpper()</h5>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">Block </Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">:</Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <h5 class="card-title overflow-hidden">@Model[i]._Plot?.Block</h5>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">Price </Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">:</Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <h5 class="card-title overflow-hidden ">@Model[i]._Plot?.Price</h5>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">Type </Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">:</Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <h5 class="card-title overflow-hidden ">@Model[i]._Plot?.Type</h5>
+                                        </div>
+                                    </div>-->
+                                    @* <textarea disabled class="card-text overflow-auto" style="min-height:200px; width:150px; max-height:300px; max-width:300px">@plotData.PlotTBL?.Description</textarea>*@
+
+                                    <!--<div class="row">
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <a href="mailto:@Model[i].Email" class="btn btn-outline-primary pr-lg-5">Email</a>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <a href="tel:@Model[i].Phone" class="btn btn-outline-primary pr-lg-5">SMS</a>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <a href="tel:@Model[i].Phone" class="btn btn-primary pr-lg-5">Call</a>
+                                        </div>
+                                    </div>-->
+                                    <a asp-action="Detail" asp-route-id="@Model[i]._Plot.PlotId" class="btn btn-outline-primary pr-lg-5">Read More</a>
+                                </div>
+                            </div>
+                            @if (Model[i].IsVerified)
+                            {
+                                <span class="card-badge badge badge-primary">Verified Agent</span>
+                            }
                         </div>
-                        @if (Model[i].IsVerified)
-                        {
-                            <span class="card-badge badge badge-primary">Verified Agent</span>
-                        }
                     </div>
-                </div>
 
-                i++;
-            }
+                    i++;
+                }
 
 
-            @*<div class="col-sm-12 col-md-4">
-                    <div class="card">
-                        <img class="card-img-top" src="" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-4">
-                    <div class="card">
-                        <img class="card-img-top" src="..." alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                    </div>
-                </div>*@
-        </div>
+            </div>
 
 
 
-
+        </section>
 
     }
 
 </div>
 
-@*<nav aria-label="...">
-        <ul class="pagination pagination-sm">
-            @if (currentPage >= 3)
-            {
-                for (int i = currentPage - 2; i <= pageCount; i++)
-                {
 
 
-                    if (i == currentPage)
-                    {
-                        <li class="page-item disabled">
-                            <a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@currentPage" tabindex="-1">@i</a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="page-item"><a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@i">@i</a></li>
-                    }
-                    if (i > (currentPage + 2))
-                    {
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 1; i <= pageCount; i++)
-                {
 
 
-                    if (i == currentPage)
-                    {
-                        <li class="page-item disabled">
-                            <a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@currentPage" tabindex="-1">@i</a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="page-item"><a class="page-link" asp-action="PlotsWithPagination" asp-route-page="@i">@i</a></li>
-                    }
-                    if (i > (currentPage + 2))
-                    {
-                        break;
-                    }
-                }
-            }
-
-        </ul>
-    </nav>
-*@
 
 <div id="chartContainer" style="margin-bottom:600px"></div>
 
@@ -246,6 +204,7 @@
 <script>
 
 window.onload = function () {
+
 
 var chart = new CanvasJS.Chart("chartContainer", {
 	theme: "light2",
@@ -268,7 +227,7 @@ var chart = new CanvasJS.Chart("chartContainer", {
 		xValueType: "dateTime",
 		xValueFormatString: "MMM YYYY",
 		yValueFormatString: "pkr #,##0.##",
-		dataPoints: @Html.Raw(ViewBag.DataPoints2)
+		dataPoints: @(Html.Raw(ViewBag.DataPoints1)??"[]")
 	},
 	{
 		type: "area",
@@ -277,7 +236,7 @@ var chart = new CanvasJS.Chart("chartContainer", {
 		xValueType: "dateTime",
 		xValueFormatString: "MMM YYYY",
         yValueFormatString: "pkr #,##0.##",
-		dataPoints: @Html.Raw(ViewBag.DataPoints1)
+		dataPoints: @(Html.Raw(ViewBag.DataPoints2)??"[]")
 	},
     {
 		type: "area",
@@ -286,13 +245,14 @@ var chart = new CanvasJS.Chart("chartContainer", {
 		xValueType: "dateTime",
 		xValueFormatString: "MMM YYYY",
         yValueFormatString: "pkr #,##0.##",
-		dataPoints: @Html.Raw(ViewBag.DataPoints3)
+		dataPoints:@(Html.Raw(ViewBag.DataPoints3)??"[]")
 	}
 	]
 });
 chart.render();
 
-}
+    }
+
 </script>
 
 
@@ -307,4 +267,17 @@ chart.render();
         }
     </style>
 }
+
+<style>
+
+
+    .fas.fa-heart:hover {
+        color: #f44336 !important;
+    }
+
+    .fas.fa-share-alt:hover {
+        color: #0d47a1 !important;
+    }
+</style>
+
 
