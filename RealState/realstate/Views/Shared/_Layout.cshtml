@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 </head>
-<body>
+<body style="margin-bottom:0px">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3">
             <div class="container">
@@ -56,12 +56,7 @@
 
 
 
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <div class="dropdown-divider"></div>
-
-
-                                    <a class="dropdown-item" href="#">Something else here</a>
+                                  
                                 </div>
                             </li>
                         }
@@ -71,17 +66,104 @@
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="">
 
             @RenderBody()
         </main>
     </div>
+    <style>
+        footer {
+            clear: both;
+            position: relative;
+            height: 200px;
+            margin-top: -200px;
+        }
+    </style>
+    <div class="row bg-primary bg-opacity-10" style="margin-top:600px" >
+        <!-- Footer -->
+        <footer class="page-footer font-small blue pt-4">
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - realstate -
-        </div>
-    </footer>
+            <!-- Footer Links -->
+            <div class="container-fluid text-center text-md-left">
+
+                <!-- Grid row -->
+                <div class="row">
+
+                    <!-- Grid column -->
+                    <div class="col-md-6 mt-md-0 mt-3">
+
+                        <!-- Content -->
+                        <h5 class="text-uppercase">About US</h5>
+                        <p>
+                            At Realstate.com, we understand that people everywhere are searching for a Plot to build their own home. We want to make this search as joyful as finally finding the perfect place because we understand that finding a place is much more than an online search!
+
+                        </p>
+
+                    </div>
+                    <!-- Grid column -->
+
+                    <hr class="clearfix w-100 d-md-none pb-3">
+
+                    <!-- Grid column -->
+                    <div class="col-md-3 mb-md-0 mb-3">
+
+                        <!-- Links -->
+                        <h5 class="text-uppercase">Links</h5>
+
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="#!">Career</a>
+                            </li>
+                            <li>
+                                <a href="#!">Send us Email</a>
+                            </li>
+                            <li>
+                                <a href="#!">Follow us</a>
+                            </li>
+                            <li>
+                                <a href="#!">Our Clients</a>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-md-3 mb-md-0 mb-3">
+
+                        <!-- Links -->
+                        <h5 class="text-uppercase">Links</h5>
+
+                        <ul class="list-unstyled">
+                            <li>
+                                <a asp-area="Identity" asp-page="/Account/Register">Register</a>
+                            </li>
+                            <li>
+                                <a asp-area="Identity" asp-page="/Account/Login">Login</a>
+                            </li>
+                            <li>
+                                <a asp-area="AdminPanel" asp-controller="Plot" asp-action="Upsert" >Add Post</a>
+                            </li>
+                            <li>
+                                <a  asp-area="AdminPanel" asp-controller="Plot" asp-action="PlotsWithPagination">Post</a>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <!-- Grid column -->
+
+                </div>
+                <!-- Grid row -->
+
+            </div>
+            <!-- Footer Links -->
+            <!-- Copyright -->
+
+            <!-- Copyright -->
+
+        </footer>
+    </div>
+    <!-- Footer -->
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
