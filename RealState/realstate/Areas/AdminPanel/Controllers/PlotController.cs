@@ -233,6 +233,10 @@ namespace realstate.Areas.AdminPanel.Controllers
             {
                 tuple = _unitOfWork.plotRepoAccess.GetAllWithPagination(x => x.Type == category, page, pageResult: 10000);
             }
+            else if (search==null && category == null)
+            {
+                tuple = _unitOfWork.plotRepoAccess.GetAllWithPagination(x => x.Type == category, page, pageResult: 4);
+            }
             if (tuple?.Item1?.Count > 0)
             {
                 plots = tuple.Item1;
@@ -409,6 +413,7 @@ namespace realstate.Areas.AdminPanel.Controllers
                     addPlotAndPhotos.Email = user.Email;
                     addPlotAndPhotos.Username = user.UserName;
                     addPlotAndPhotos.Phone = user.PhoneNumber;
+                    addPlotAndPhotos.Map = allSocities.Map;
                     addPlotAndPhotos.PhotosUrl = _unitOfWork.photoRepoAccess.GetAll(x => x.PlotId == id.GetValueOrDefault()).Select(x => x.PublicURL).ToList();
                     //addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
                 }

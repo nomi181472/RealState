@@ -31,110 +31,110 @@
     @for (int i = 0; i < keys;)
     {
 
+        <section class="mx-auto my-5" style="max-width: 80rem;">
+            <div class="row bg-light p-3">
 
-        <div class="row bg-light p-3">
+                @for (int j = 0; j < 3 && i < keys; j++)
+                {
+                    plotData = Model[i]._Plot;
+                    photo = Model[i].Photos.FirstOrDefault();
+                    <div class="col-sm-12 col-md-4 h-100">
+                        <div class="card @verifiedHighlight">
 
-            @for (int j = 0; j < 3 && i < keys; j++)
-            {
-                plotData = Model[i]._Plot;
-                photo = Model[i].Photos.FirstOrDefault();
-                <div class="col-sm-12 col-md-4 h-100">
-                    <div class="card @verifiedHighlight">
+                            <img class="card-img-top img-thumbnail img-fluid" style="height:400px;" src="@photo?.PublicURL??@altImage" alt="Image not available">
 
-                        <img class="card-img-top img-thumbnail img-fluid" style="height:400px;" src="@photo?.PublicURL??@altImage" alt="Image not available">
-
-                        <div class="card-body">
-                            <div class="text-center">
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">SocietyName</Label>
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">SocietyName</Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">:</Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <h5 class="card-title overflow-hidden">@plotData?.SocietyTBL.Name.ToUpper()</h5>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">:</Label>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">Block </Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">:</Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <h5 class="card-title overflow-hidden">@plotData?.Block</h5>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden">@plotData?.SocietyTBL.Name.ToUpper()</h5>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">Price </Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">:</Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <h5 class="card-title overflow-hidden ">@plotData?.Price</h5>
+                                        </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">Type </Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <Label class="card-title fw-bold">:</Label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 h-100">
+                                            <h5 class="card-title overflow-hidden ">@plotData?.Type</h5>
+                                        </div>
+                                    </div>
+
+                                    @* <textarea disabled class="card-text overflow-auto" style="min-height:200px; width:150px; max-height:300px; max-width:300px">@plotData.PlotTBL?.Description</textarea>*@
+
+
+                                    <a asp-action="DetailSec" asp-route-id="@plotData?.PlotId" class="btn btn-outline-info pr-lg-5">Details</a>
+                                    <a asp-action="Delete" asp-route-id="@plotData?.PlotId" class="btn btn-outline-danger  pr-lg-5">Delete</a>
+
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">Block </Label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">:</Label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden">@plotData?.Block</h5>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">Price </Label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">:</Label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden ">@plotData?.Price</h5>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">Type </Label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <Label class="card-title fw-bold">:</Label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 h-100">
-                                        <h5 class="card-title overflow-hidden ">@plotData?.Type</h5>
-                                    </div>
-                                </div>
+                            </div>
+                            @if (Model[i].IsVerified)
+                            {
+                                <span class="card-badge badge badge-primary">Verified Agent</span>
+                            }
+                        </div>
+                    </div>
 
-                                @* <textarea disabled class="card-text overflow-auto" style="min-height:200px; width:150px; max-height:300px; max-width:300px">@plotData.PlotTBL?.Description</textarea>*@
+                    i++;
+                }
 
 
-                                <a asp-action="DetailSec" asp-route-id="@plotData?.PlotId" class="btn btn-outline-info pr-lg-5">Details</a>
-                                <a asp-action="Delete" asp-route-id="@plotData?.PlotId" class="btn btn-outline-danger  pr-lg-5">Delete</a>
-
+                @*<div class="col-sm-12 col-md-4">
+                        <div class="card">
+                            <img class="card-img-top" src="" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                             </div>
                         </div>
-                        @if (Model[i].IsVerified)
-                        {
-                            <span class="card-badge badge badge-primary">Verified Agent</span>
-                        }
                     </div>
-                </div>
-
-                i++;
-            }
-
-
-            @*<div class="col-sm-12 col-md-4">
-                    <div class="card">
-                        <img class="card-img-top" src="" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    <div class="col-sm-12 col-md-4">
+                        <div class="card">
+                            <img class="card-img-top" src="..." alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-4">
-                    <div class="card">
-                        <img class="card-img-top" src="..." alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                    </div>
-                </div>*@
-        </div>
+                    </div>*@
+            </div>
 
+            </section>
 
+            <div class="divider py-4 bg-light"></div>
 
-        <div class="divider py-4 bg-light"></div>
-
-    }
+        }
 
 </div>

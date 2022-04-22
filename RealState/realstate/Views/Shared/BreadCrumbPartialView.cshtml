@@ -4,14 +4,14 @@
 @model string[];
 @{
 }
-<div class="myNavigation">
-    <div class="container" style="border:0; font-weight:bold;">
-        <div>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item primary"><span href="#">Home</span></li>
+<div class="myNavigation" >
+    <div class="container"  style="border: 0; font-size: 200%;font-weight: bold; ">
+        <div> 
+            <ol class="breadcrumb bg-primary text-light border-primary bg-opacity-50">
+                <li class="breadcrumb-item primary border-0 " style="border: 0; "><span href="#">Home</span></li>
                 @foreach (var item in Model)
                 {
-                    <li class="breadcrumb-item primary"><span href="#">@item</span></li>
+                    <li class="breadcrumb-item primary " style="border: 0;"><span href="#">@item</span></li>
                 }
             </ol>
         </div>

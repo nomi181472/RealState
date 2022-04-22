@@ -14,12 +14,14 @@ namespace realstate.models.ViewModels.VMModels
         public int PlotId { get; set; }
         [Required]
         public int SocietyId { get; set; }
+
         public string UserId { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
 
         public string SocietyName { get; set; }
+        public string Map { get; set; }
         [Required]
         public double PlotSize { get; set; } //TODO Multiple units
         [Required]
