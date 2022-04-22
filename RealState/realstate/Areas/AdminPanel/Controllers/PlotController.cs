@@ -469,7 +469,12 @@ namespace realstate.Areas.AdminPanel.Controllers
             BlockType.Add("A");
             BlockType.Add("B");
             BlockType.Add("C");
+            List<string> units = new List<string>();
+            units.Add("Kanal");
+            units.Add("Marla");
+            
             addPlotAndPhotos.BlockTypes = BlockType.Select(x => new SelectListItem() { Text = x, Value = x.ToString() }).ToList();
+            addPlotAndPhotos.Units = units.Select(x => new SelectListItem() { Text = x, Value = x.ToString() }).ToList();
             addPlotAndPhotos.allSocieties = allSocities.Select(x => new SelectListItem() { Text = x.Name, Value = x.SocietyId.ToString() }).ToList();
             addPlotAndPhotos.PostType = PostType.Select(x => new SelectListItem() { Text = x, Value = x.ToString() }).ToList();
         }
@@ -520,7 +525,7 @@ namespace realstate.Areas.AdminPanel.Controllers
 
 
             string redirect = nameof(Index);
-
+            
             
 
             string userId = _userManager.GetUserId(User);
@@ -530,12 +535,18 @@ namespace realstate.Areas.AdminPanel.Controllers
             
             if (ModelState.IsValid)
             {
+                double calculatedMarlaSize = 0;
+                if(entity.SelectedUnit=="Kanal")
+                {
+                    calculatedMarlaSize = 20 * entity.PlotSize;
+                }
 
                 if (entity.PlotId == 0)
                 {
                    
                      temp = ModelConversion.ModelConversionUsingJSON<AddPlotAndPhotos, Plot>(entity);
                     temp.UpdateOn = DateTime.UtcNow.ToString();
+                    temp.PlotSize = calculatedMarlaSize;
                     temp.UserId = userId;// _userManager.GetUserId(User); 
                     var plotId = _unitOfWork.plotRepoAccess.SetAndGet(temp).PlotId;
                     
@@ -547,6 +558,7 @@ namespace realstate.Areas.AdminPanel.Controllers
                     {
                         temp = ModelConversion.ModelConversionUsingJSON<AddPlotAndPhotos, Plot>(entity);
                         temp.UpdateOn = DateTime.UtcNow.ToString();
+                        temp.PlotSize = calculatedMarlaSize;
                         await _unitOfWork.plotRepoAccess.Update(temp); //already saving inside
                         
                     }

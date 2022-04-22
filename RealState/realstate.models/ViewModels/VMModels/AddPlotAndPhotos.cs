@@ -34,6 +34,8 @@ namespace realstate.models.ViewModels.VMModels
         public string Description { get; set; }
         [Required]
         public string Type { get; set; }
+        public string   SelectedUnit { get; set; }
+        public IEnumerable<SelectListItem> Units { get; set; }
 
         public IEnumerable<SelectListItem> allSocieties { get; set; }
         public IEnumerable<SelectListItem> PostType { get; set; }

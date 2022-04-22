@@ -43,8 +43,8 @@
                     <span asp-validation-for="PlotSize" class="text-danger"></span>
                 </div>
                 <div class="col-4">
-                    <label class="form-control">Marla</label>
-                    <span asp-validation-for="Price" class="text-danger"></span>
+                    @Html.DropDownListFor(x => x.SelectedUnit, Model.Units, "--Units--", new { @class = "form-control" })
+                    <span asp-validation-for="SelectedUnit" class="text-danger"></span>
                 </div>
             </div> @*PlotSize*@
             <div class="form-group row">
